@@ -6,6 +6,8 @@
 #include <EasyLogging.h>
 #include <NaoqiLog.cpp>
 
+#include "perception/Perception.hpp"
+
 INITIALIZE_EASYLOGGINGPP
 
 std::string logo = R"(
@@ -36,6 +38,8 @@ int main() {
     LOG(INFO) << "\x1B[32m[MAIN] Connecting to NAO at " << naoConfig.ip << ":" << naoConfig.port << "\x1B[0m";
 
     try {
+        Perception p;
+
         auto naoBroker = AL::ALBroker::createBroker(
             "NaoBroker",
             "",
@@ -55,7 +59,7 @@ int main() {
 
     }
     catch (const std::exception& ex) {
-        LOG(ERROR) << "\x1B[31mError while connecting or executing commands on NAO: " << ex.what() << "\x1B[0m";
+        LOG(ERROR) << "\x1B[31m[MAIN] Error while connecting or executing commands on NAO: " << ex.what() << "\x1B[0m";
         return EXIT_FAILURE;
     }
 

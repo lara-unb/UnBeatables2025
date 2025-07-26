@@ -22,9 +22,15 @@ add_compile_options(
 
 link_directories(${SDK_PATH}/lib)
 
-file(GLOB SRC_FILES "*.cpp" "lib/EasyLogging.cc")
+file(GLOB_RECURSE SRC_FILES
+        "lib/EasyLogging.cc"
+        ${CMAKE_SOURCE_DIR}/src/*.cpp
+        UnBeatables.cpp
+)
 
 add_executable(exe ${SRC_FILES})
+
+target_compile_definitions(exe PRIVATE USE_NAOQI)
 
 set_target_properties(exe PROPERTIES
         LINK_FLAGS "-Wl,-rpath,${SDK_PATH}/lib"
