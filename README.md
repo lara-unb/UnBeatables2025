@@ -2,12 +2,12 @@
 
 **Bem-vindo(a), integrante da equipe UnBeatables!**
 
-Este repositório contém o código desenvolvido com dedicação para nossa jornada em competições. Se você contribuiu com este projeto, deixe sua marca adicionando seu nome à tabela abaixo:
+Este repositório contém o código de competição desenvolvido com muito carinho. Gostaria de convidar você a deixar sua marca nessa importante jornada. Por favor, se você contribuiu para o código e time, coloque seu nome aqui:
 
-| Integrantes       |
-|:-----------------:|
-| Jão (i-JSS)       |
-|   |
+| Integrantes |
+|-------------|
+| Jão (i-JSS) |
+|             |
 
 
 ## 🔧 Instalação
@@ -51,5 +51,3 @@ chmod +x UnBeatables.sh
 ## 🤝 Contribuições
 
 Sinta-se à vontade para melhorar o projeto! Se você fez contribuições significativas, não esqueça de atualizar a seção de integrantes. Juntos, somos imbatíveis!
-
----
