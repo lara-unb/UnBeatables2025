@@ -26,7 +26,7 @@ NaoConnectionConfig naoConfig;
 
 void configureLoggingSystem() {
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format,
-    "\x1B[36m %datetime %level [%logger]\x1B[0m %msg");
+    "\x1B[36m %datetime %level [%logger]\x1B[0m \t%msg");
     redirectNaoqiLogsToEasyLogging();
 }
 

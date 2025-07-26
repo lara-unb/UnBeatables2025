@@ -1,13 +1,13 @@
 void customNaoqiLogHandler(
-const qi::LogLevel level,
-const boost::chrono::time_point<qi::Clock> date,
-const boost::chrono::time_point<qi::SystemClock> systemDate,
-const char* category,
-const char* msg,
-const char* file,
-const char* function,
-const int line)
-{
+    const qi::LogLevel level,
+    const boost::chrono::time_point<qi::Clock> date,
+    const boost::chrono::time_point<qi::SystemClock> systemDate,
+    const char* category,
+    const char* msg,
+    const char* file,
+    const char* function,
+    const int line
+){
     std::string levelStr;
     switch (level) {
         case qi::LogLevel_Debug:   levelStr = "[D]"; break;
@@ -19,7 +19,7 @@ const int line)
     }
 
     std::stringstream logMessage;
-    logMessage << "\033[33m" << "[naoqi] " << levelStr << " " << msg << " (" << category << ")" << "\033[0m";
+    logMessage << "\033[33m" << "[NAOqi] " << levelStr << " " << msg << " (" << category << ")" << "\033[0m";
 
     switch (level) {
         case qi::LogLevel_Debug:
