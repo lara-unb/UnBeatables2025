@@ -6,9 +6,11 @@
 #include <EasyLogging.h>
 #include <NaoqiLog.cpp>
 
+#include "NaoConnectionConfig.hpp"
 #include "perception/Perception.hpp"
 
 INITIALIZE_EASYLOGGINGPP
+NaoConnectionConfig naoConfig;
 
 std::string logo = R"(
   _    _       ____             _        _     _
@@ -19,12 +21,6 @@ std::string logo = R"(
   \____/|_| |_|____/ \___|\__,_|\__\__,_|_.__/|_|\___||___/
 
 )";
-
-struct NaoConnectionConfig {
-    std::string ip = "127.0.0.2";
-    int port = 9559;
-};
-NaoConnectionConfig naoConfig;
 
 void configureLoggingSystem() {
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format,
@@ -38,7 +34,6 @@ int main() {
     LOG(INFO) << "\x1B[32m[MAIN] Connecting to NAO at " << naoConfig.ip << ":" << naoConfig.port << "\x1B[0m";
 
     try {
-        Perception p;
 
         auto naoBroker = AL::ALBroker::createBroker(
             "NaoBroker",
@@ -50,6 +45,9 @@ int main() {
 
         AL::ALTextToSpeechProxy ttsProxy(naoConfig.ip, naoConfig.port);
         AL::ALMotionProxy motionProxy(naoConfig.ip, naoConfig.port);
+        Perception p;
+
+
 
         motionProxy.wakeUp();
 

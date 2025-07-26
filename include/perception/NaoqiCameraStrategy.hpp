@@ -2,13 +2,19 @@
 
 #include "CameraStrategy.hpp"
 #include <alproxies/alvideodeviceproxy.h>
+#include <memory>
+#include <string>
 
 class NaoqiCameraStrategy : public CameraStrategy {
 private:
-    AL::ALVideoDeviceProxy*camera = nullptr;
+    std::unique_ptr<AL::ALVideoDeviceProxy> videoProxy;
+    const std::string topClient = "cpp_client_top";
+    const std::string bottomClient = "cpp_client_bottom";
+
+    cv::Mat getCameraFrame(const std::string& clientId) const;
 
 public:
-    bool open() override;
+    void open() override;
     void close() override;
     cv::Mat getTopCamera() override;
     cv::Mat getBotCamera() override;

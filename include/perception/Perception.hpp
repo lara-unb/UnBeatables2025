@@ -5,6 +5,7 @@
 class Perception {
 private:
     CameraStrategy *camera;
+
 public:
     Perception();
     ~Perception();
