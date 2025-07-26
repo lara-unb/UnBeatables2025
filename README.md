@@ -1,7 +1,5 @@
 # UnBeatables2025
 
----
-
 **Bem-vindo(a), integrante da equipe UnBeatables!**
 
 Este repositório contém o código desenvolvido com dedicação para nossa jornada em competições. Se você contribuiu com este projeto, deixe sua marca adicionando seu nome à tabela abaixo:
@@ -11,7 +9,6 @@ Este repositório contém o código desenvolvido com dedicação para nossa jorn
 | Jão (i-JSS)       |
 |   |
 
----
 
 ## 🔧 Instalação
 
@@ -27,7 +24,6 @@ chmod +x setup.sh
 
 > Isso criará uma pasta **UnBeatables** no seu diretório home (`~/UnBeatables`) e instalará todas as dependências necessárias.
 
----
 
 ## 🚀 Executando o Projeto
 
@@ -51,7 +47,6 @@ chmod +x UnBeatables.sh
 > Esse comando criará a pasta `build/` na raiz do projeto e executará o binário gerado.  
 > ⚠️ **Atenção:** Não faça commit da pasta `build/` no repositório.
 
----
 
 ## 🤝 Contribuições
 
