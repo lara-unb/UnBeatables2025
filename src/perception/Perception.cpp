@@ -21,7 +21,7 @@ Perception::~Perception() {
     delete camera;
 }
 
-void Perception::process() {
+void Perception::process() const {
     while (isRunning) {
         perceptionBoard.topCamera = ballDetector->detectBallTop(camera->getTopCamera());
         perceptionBoard.botCamera = ballDetector->detectBallBot(camera->getBotCamera());

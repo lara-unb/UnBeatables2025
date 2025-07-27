@@ -2,9 +2,7 @@
 
 #include <string>
 #include <opencv2/opencv.hpp>
-
 #include "UnBoard.hpp"
-
 
 class BallDetector {
 private:

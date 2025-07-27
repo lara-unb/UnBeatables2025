@@ -14,11 +14,11 @@ private:
     cv::Mat getCameraFrame(const std::string& clientId) const;
 
 public:
+    NaoqiCameraStrategy();
+    ~NaoqiCameraStrategy() override;
+
     void open() override;
     void close() override;
     cv::Mat getTopCamera() override;
     cv::Mat getBotCamera() override;
-
-    NaoqiCameraStrategy();
-    ~NaoqiCameraStrategy() override;
 };
