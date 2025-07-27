@@ -14,6 +14,12 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/include
 )
 
+file(COPY
+        ${CMAKE_SOURCE_DIR}/include/perception/cascade
+        DESTINATION
+        ${CMAKE_BINARY_DIR}/include/perception
+)
+
 add_compile_options(
         -D_GLIBCXX_USE_CXX11_ABI=0
         -w -Wno-deprecated -Wno-unused-parameter -Wno-unknown-pragmas

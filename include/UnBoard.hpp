@@ -1,41 +1,38 @@
 #pragma once
 
 #include <cstdint>
-#include <mutex>
+#include <atomic>
+
+using namespace std;
+
+struct BallPositionData {
+    bool seen = false;
+    int x = 0;
+    int y = 0;
+
+    BallPositionData() = default;
+    BallPositionData(bool ss, int xx, int yy) : seen(ss), x(xx), y(yy) {}
+};
 
 struct PerceptionBoard {
-    std::mutex mutex;
-
-    uint16_t height = 240;
-    uint16_t width = 320;
-
-    bool seeBallTop = false;
-    bool seeBallBot = false;
-
-    int16_t ballXBot = -1;
-    int16_t ballYBot = -1;
-
-    int16_t ballXTop = -1;
-    int16_t ballYTop = -1;
+    uint16_t cameraHeight = 240;
+    uint16_t cameraWidth = 320;
+    BallPositionData topCamera;
+    BallPositionData botCamera;
 };
 extern PerceptionBoard perceptionBoard;
 
 struct CommunicationBoard {
-    std::mutex mutex;
-
-    uint8_t playerNumber = 3;
-    uint8_t teamNumber = 0;
-
-    int8_t gamePhase = -1;
-    int8_t gameState = -1;
-    int8_t setPlay = -1;
-    int8_t firstHalf = -1;
-    int8_t kickingTeam = -1;
-    int16_t secsRemaining = -1;
-
-    int16_t score = -1;
-
-    uint8_t penalty = 0;
-    int16_t secsTillUnpenalised = 0;
+    atomic<int8_t> gamePhase;
+    atomic<int8_t> gameState;
+    atomic<int8_t> setPlay;
+    atomic<int8_t> firstHalf;
+    atomic<int8_t> kickingTeam;
+    atomic<uint8_t> playerNumber;
+    atomic<uint8_t> penalty;
+    atomic<uint8_t> teamNumber;
+    atomic<int16_t> secsRemaining;
+    atomic<int16_t> score;
+    atomic<int16_t> secsTillUnpenalised;
 };
 extern CommunicationBoard communicationBoard;

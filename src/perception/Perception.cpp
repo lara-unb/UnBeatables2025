@@ -3,14 +3,17 @@
 #include "EasyLogging.h"
 
 Perception::Perception() {
+    isRunning = false;
 #ifdef USE_NAOQI
     camera = new NaoqiCameraStrategy();
+    isRunning = true;
 #else
     camera = nullptr;
     LOG(ERROR) << "\x1B[31m[PERCEPTION] Error: Camera strategy not found\x1B[0m";
     throw std::runtime_error("Failed to set camera strategy (File: " + std::string(__FILE__) + ", Line: " + std::to_string(__LINE__) + ")");
 #endif
-    isRunning = true;
+
+    ballDetector = new BallDetector("include/perception/cascade/cascade-2024-10.xml");
 }
 
 Perception::~Perception() {
@@ -20,9 +23,8 @@ Perception::~Perception() {
 
 void Perception::process() {
     while (isRunning) {
-        camera->getTopCamera();
-        camera->getBotCamera();
-        LOG(INFO) << "\x1B[31m[PERCEPTION] Teste perception: pegando a altura:  \x1B[0m" << perceptionBoard.height;
+        perceptionBoard.topCamera = ballDetector->detectBallTop(camera->getTopCamera());
+        perceptionBoard.botCamera = ballDetector->detectBallBot(camera->getBotCamera());
     }
 }
 
