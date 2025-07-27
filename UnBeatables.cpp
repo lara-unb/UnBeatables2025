@@ -1,16 +1,13 @@
-#include <alcommon/albroker.h>
-#include <alproxies/almotionproxy.h>
-#include <alproxies/altexttospeechproxy.h>
-#include <iostream>
+#include <csignal>
+#include <thread>
 
 #include <EasyLogging.h>
 #include <NaoqiLog.cpp>
-
 #include "NaoConnectionConfig.hpp"
 #include "perception/Perception.hpp"
+#include "UnBoard.hpp"
 
 INITIALIZE_EASYLOGGINGPP
-NaoConnectionConfig naoConfig;
 
 std::string logo = R"(
   _    _       ____             _        _     _
@@ -22,44 +19,48 @@ std::string logo = R"(
 
 )";
 
+PerceptionBoard perceptionBoard;
+CommunicationBoard communicationBoard;
+NaoConnectionConfig naoConfig;
+
+std::shared_ptr<Perception> perception;
+
+void signalHandler(int signum) {
+    LOG(WARNING) << "\x1B[32m[MAIN] Process interrupted by signal " << signum << "\x1B[0m";
+    if (perception) {
+        LOG(INFO) << "\x1B[32m[MAIN] Closing perception\x1B[0m";
+        perception->close();
+    }
+    exit(signum);
+}
+
 void configureLoggingSystem() {
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format,
     "\x1B[36m %datetime %level [%logger]\x1B[0m \t%msg");
     redirectNaoqiLogsToEasyLogging();
 }
 
+void configurePerception() {
+    perception = std::make_shared<Perception>();
+    std::thread t(&Perception::process, perception);
+    t.join();
+}
+
 int main() {
+    std::signal(SIGINT, signalHandler);
+
     configureLoggingSystem();
+
     LOG(INFO) << "\x1B[32m" << logo << "\x1B[0m";
+    LOG(INFO) << "\x1B[32m[MAIN] Initializing Unboard\x1B[0m";
     LOG(INFO) << "\x1B[32m[MAIN] Connecting to NAO at " << naoConfig.ip << ":" << naoConfig.port << "\x1B[0m";
 
     try {
-
-        auto naoBroker = AL::ALBroker::createBroker(
-            "NaoBroker",
-            "",
-            0,
-            naoConfig.ip,
-            naoConfig.port
-        );
-
-        AL::ALTextToSpeechProxy ttsProxy(naoConfig.ip, naoConfig.port);
-        AL::ALMotionProxy motionProxy(naoConfig.ip, naoConfig.port);
-        Perception p;
-
-
-
-        motionProxy.wakeUp();
-
-        ttsProxy.say("Hello, UnBeatables!");
-
-        motionProxy.rest();
-
+        configurePerception();
     }
     catch (const std::exception& ex) {
         LOG(ERROR) << "\x1B[31m[MAIN] Error while connecting or executing commands on NAO: " << ex.what() << "\x1B[0m";
         return EXIT_FAILURE;
     }
-
     return EXIT_SUCCESS;
 }

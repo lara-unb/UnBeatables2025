@@ -1,6 +1,6 @@
 #include <alcommon/alproxy.h>
 #include <alvision/alimage.h>
-#include <perception/NaoqiCameraStrategy.hpp>
+#include <perception/camera/NaoqiCameraStrategy.hpp>
 #include "EasyLogging.h"
 #include "NaoConnectionConfig.hpp"
 #include <opencv2/opencv.hpp>
