@@ -7,11 +7,11 @@
 
 class NaoqiCameraStrategy : public CameraStrategy {
 private:
-    std::unique_ptr<AL::ALVideoDeviceProxy> videoProxy;
-    const std::string topClient = "cpp_client_top";
-    const std::string bottomClient = "cpp_client_bottom";
+    AL::ALVideoDeviceProxy videoService;
+    std::string topClient = "cpp_client_top";
+    std::string bottomClient = "cpp_client_bottom";
 
-    cv::Mat getCameraFrame(const std::string& clientId) const;
+    cv::Mat getCameraFrame(std::string& clientId);
 
 public:
     NaoqiCameraStrategy();

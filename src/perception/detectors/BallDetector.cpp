@@ -1,4 +1,4 @@
-#include <perception/ballDetector/BallDetector.hpp>
+#include <perception/detectors/BallDetector.hpp>
 #include "EasyLogging.h"
 
 BallDetector::BallDetector(const std::string& cascadePath) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ballDetector/BallDetector.hpp"
+#include "detectors/BallDetector.hpp"
 #include "camera/NaoqiCameraStrategy.hpp"
 
 class Perception {

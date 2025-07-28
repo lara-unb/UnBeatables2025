@@ -3,7 +3,7 @@
 
 #include <EasyLogging.h>
 #include <NaoqiLog.cpp>
-#include "NaoConnectionConfig.hpp"
+#include "connectionConfig.hpp"
 #include "perception/Perception.hpp"
 #include "UnBoard.hpp"
 
@@ -21,7 +21,8 @@ std::string logo = R"(
 
 PerceptionBoard perceptionBoard;
 CommunicationBoard communicationBoard;
-NaoConnectionConfig naoConfig;
+ConnectionConfig connectionConfig;
+qi::SessionPtr session;
 
 std::shared_ptr<Perception> perception;
 
@@ -40,6 +41,19 @@ void configureLoggingSystem() {
     redirectNaoqiLogsToEasyLogging();
 }
 
+void configureSession() {
+    session = qi::makeSession();
+    LOG(INFO) << "\x1B[32m[MAIN] Connecting to " << connectionConfig.ip << ":" << connectionConfig.port;
+    auto connectFuture = session->connect("tcp://" + connectionConfig.ip + ":" + std::to_string(connectionConfig.port));
+
+    if (connectFuture.wait(3000) == qi::FutureState_Running)
+        throw std::runtime_error("Connection timeout");
+    if (connectFuture.hasError())
+        throw std::runtime_error(connectFuture.error());
+
+    LOG(INFO) << "\x1B[32m[MAIN] Successfully connected to NAOqi\x1B[0m";
+}
+
 void configurePerception() {
     perception = std::make_shared<Perception>();
     std::thread t(&Perception::process, perception);
@@ -53,9 +67,9 @@ int main() {
 
     LOG(INFO) << "\x1B[32m" << logo << "\x1B[0m";
     LOG(INFO) << "\x1B[32m[MAIN] Initializing Unboard\x1B[0m";
-    LOG(INFO) << "\x1B[32m[MAIN] Connecting to NAO at " << naoConfig.ip << ":" << naoConfig.port << "\x1B[0m";
 
     try {
+        configureSession();
         configurePerception();
     }
     catch (const std::exception& ex) {

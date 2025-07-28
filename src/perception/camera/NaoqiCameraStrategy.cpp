@@ -4,10 +4,11 @@
 #include <opencv2/opencv.hpp>
 
 #include "EasyLogging.h"
-#include "NaoConnectionConfig.hpp"
+#include "connectionConfig.hpp"
 
 NaoqiCameraStrategy::NaoqiCameraStrategy()
-    : videoProxy(new AL::ALVideoDeviceProxy(naoConfig.ip, naoConfig.port)) {
+    : videoService(boost::make_shared<AL::ALProxy>(session, "ALVideoDevice")) {
+
     LOG(INFO) << "\x1B[35m[CAMERA] Using the NAOqi camera\x1B[0m";
 }
 
@@ -18,8 +19,8 @@ NaoqiCameraStrategy::~NaoqiCameraStrategy() {
 void NaoqiCameraStrategy::open() {
     LOG(INFO) << "\x1B[35m[CAMERA] Opening NAOqi cameras\x1B[0m";
     try {
-        videoProxy->subscribeCamera(topClient, 0, AL::kQVGA, AL::kBGRColorSpace, 5);
-        videoProxy->subscribeCamera(bottomClient, 1, AL::kQVGA, AL::kBGRColorSpace, 5);
+        videoService.subscribeCamera(topClient, 0, AL::kQVGA, AL::kBGRColorSpace, 5);
+        videoService.subscribeCamera(bottomClient, 1, AL::kQVGA, AL::kBGRColorSpace, 5);
     } catch (const std::exception& e) {
         throw std::runtime_error("Failed to open cameras (File: " + std::string(__FILE__) + ", Line: " + std::to_string(__LINE__) + ")");
     }
@@ -28,16 +29,16 @@ void NaoqiCameraStrategy::open() {
 void NaoqiCameraStrategy::close() {
     LOG(INFO) << "\x1B[35m[CAMERA] Closing NAOqi cameras\x1B[0m";
     try {
-        videoProxy->unsubscribe(topClient);
-        videoProxy->unsubscribe(bottomClient);
+        videoService.unsubscribe(topClient);
+        videoService.unsubscribe(bottomClient);
     } catch (const std::exception& e) {
         LOG(ERROR) << "Failed to close cameras properly: " << e.what();
     }
 }
 
-cv::Mat NaoqiCameraStrategy::getCameraFrame(const std::string& clientId) const {
+cv::Mat NaoqiCameraStrategy::getCameraFrame(std::string& clientId) {
     try {
-        AL::ALValue img = videoProxy->getImageRemote(clientId);
+        AL::ALValue img = videoService.getImageRemote(clientId);
         if (img.getType() == AL::ALValue::TypeInvalid || img.getSize() <= 6) {
             LOG(WARNING) << "\x1B[35m[CAMERA] Invalid image data from client: " << clientId << "\x1B[0m";
             return {};
