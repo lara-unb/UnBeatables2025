@@ -1,10 +1,11 @@
-#include <alcommon/albroker.h>
-#include <alproxies/almotionproxy.h>
-#include <alproxies/altexttospeechproxy.h>
-#include <iostream>
+#include <csignal>
+#include <thread>
 
 #include <EasyLogging.h>
 #include <NaoqiLog.cpp>
+#include "connectionConfig.hpp"
+#include "perception/Perception.hpp"
+#include "UnBoard.hpp"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -18,11 +19,21 @@ std::string logo = R"(
 
 )";
 
-struct NaoConnectionConfig {
-    std::string ip = "127.0.0.2";
-    int port = 9559;
-};
-NaoConnectionConfig naoConfig;
+PerceptionBoard perceptionBoard;
+CommunicationBoard communicationBoard;
+ConnectionConfig connectionConfig;
+qi::SessionPtr session;
+
+std::shared_ptr<Perception> perception;
+
+void signalHandler(int signum) {
+    LOG(WARNING) << "\x1B[32m[MAIN] Process interrupted by signal " << signum << "\x1B[0m";
+    if (perception) {
+        LOG(INFO) << "\x1B[32m[MAIN] Closing perception\x1B[0m";
+        perception->close();
+    }
+    exit(signum);
+}
 
 void configureLoggingSystem() {
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format,
@@ -30,34 +41,40 @@ void configureLoggingSystem() {
     redirectNaoqiLogsToEasyLogging();
 }
 
+void configureSession() {
+    session = qi::makeSession();
+    LOG(INFO) << "\x1B[32m[MAIN] Connecting to " << connectionConfig.ip << ":" << connectionConfig.port;
+    auto connectFuture = session->connect("tcp://" + connectionConfig.ip + ":" + std::to_string(connectionConfig.port));
+
+    if (connectFuture.wait(3000) == qi::FutureState_Running)
+        throw std::runtime_error("Connection timeout");
+    if (connectFuture.hasError())
+        throw std::runtime_error(connectFuture.error());
+
+    LOG(INFO) << "\x1B[32m[MAIN] Successfully connected to NAOqi\x1B[0m";
+}
+
+void configurePerception() {
+    perception = std::make_shared<Perception>();
+    std::thread t(&Perception::process, perception);
+    t.join();
+}
+
 int main() {
+    std::signal(SIGINT, signalHandler);
+
     configureLoggingSystem();
+
     LOG(INFO) << "\x1B[32m" << logo << "\x1B[0m";
-    LOG(INFO) << "\x1B[32m[MAIN] Connecting to NAO at " << naoConfig.ip << ":" << naoConfig.port << "\x1B[0m";
+    LOG(INFO) << "\x1B[32m[MAIN] Initializing Unboard\x1B[0m";
 
     try {
-        auto naoBroker = AL::ALBroker::createBroker(
-            "NaoBroker",
-            "",
-            0,
-            naoConfig.ip,
-            naoConfig.port
-        );
-
-        AL::ALTextToSpeechProxy ttsProxy(naoConfig.ip, naoConfig.port);
-        AL::ALMotionProxy motionProxy(naoConfig.ip, naoConfig.port);
-
-        motionProxy.wakeUp();
-
-        ttsProxy.say("Hello, UnBeatables!");
-
-        motionProxy.rest();
-
+        configureSession();
+        configurePerception();
     }
     catch (const std::exception& ex) {
-        LOG(ERROR) << "\x1B[31mError while connecting or executing commands on NAO: " << ex.what() << "\x1B[0m";
+        LOG(ERROR) << "\x1B[31m[MAIN] Error while connecting or executing commands on NAO: " << ex.what() << "\x1B[0m";
         return EXIT_FAILURE;
     }
-
     return EXIT_SUCCESS;
 }

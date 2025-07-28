@@ -1,3 +1,5 @@
+#include <alcommon/albroker.h>
+
 void customNaoqiLogHandler(
     const qi::LogLevel level,
     const boost::chrono::time_point<qi::Clock> date,
