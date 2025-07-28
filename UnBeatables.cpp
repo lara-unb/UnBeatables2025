@@ -3,7 +3,7 @@
 
 #include <EasyLogging.h>
 #include <NaoqiLog.cpp>
-#include "connectionConfig.hpp"
+#include "ConnectionConfig.hpp"
 #include "perception/Perception.hpp"
 #include "UnBoard.hpp"
 
@@ -31,6 +31,10 @@ void signalHandler(int signum) {
     if (perception) {
         LOG(INFO) << "\x1B[32m[MAIN] Closing perception\x1B[0m";
         perception->close();
+    }
+    if (session) {
+        LOG(INFO) << "\x1B[32m[MAIN] Closing session\x1B[0m";
+        session->close();
     }
     exit(signum);
 }
