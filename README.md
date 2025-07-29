@@ -24,7 +24,6 @@ chmod +x setup.sh
 
 > Isso criará uma pasta **UnBeatables** no seu diretório home (`~/UnBeatables`) e instalará todas as dependências necessárias.
 
-
 ## 🚀 Executando o Projeto
 
 ### Recomendado: CLion IDE
