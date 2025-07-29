@@ -9,7 +9,6 @@ Este repositório contém o código de competição desenvolvido com muito carin
 | Jão (i-JSS) |
 |             |
 
-
 ## 🔧 Instalação
 
 Para instalar o ambiente, siga os passos abaixo:
