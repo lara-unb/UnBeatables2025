@@ -1,6 +1,6 @@
 #pragma once
 #include <qi/session.hpp>
-#include <alproxies/altexttospeechproxy.h>
+#include <alproxies>
 #include <iostream>
 
 class Behavior {
