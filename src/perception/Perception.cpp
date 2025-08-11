@@ -16,11 +16,6 @@ Perception::Perception() {
     ballDetector = new BallDetector("include/perception/cascade/cascade-2024-10.xml");
 }
 
-Perception::~Perception() {
-    close();
-    delete camera;
-}
-
 void Perception::process() const {
     while (isRunning) {
         perceptionBoard.topCamera = ballDetector->detectBallTop(camera->getTopCamera());

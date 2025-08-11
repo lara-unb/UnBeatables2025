@@ -28,8 +28,7 @@ qi::SessionPtr session;
 std::shared_ptr<Perception> perception;
 std::shared_ptr<Behavior> behavior;
 
-void signalHandler(int signum) {
-    LOG(WARNING) << "\x1B[32m[MAIN] Process interrupted by signal " << signum << "\x1B[0m";
+void close() {
     if (perception) {
         LOG(INFO) << "\x1B[32m[MAIN] Closing perception\x1B[0m";
         perception->close();
@@ -42,6 +41,11 @@ void signalHandler(int signum) {
         LOG(INFO) << "\x1B[32m[MAIN] Closing session\x1B[0m";
         session->close();
     }
+}
+
+void signalHandler(int signum) {
+    LOG(WARNING) << "\x1B[32m[MAIN] Process interrupted by signal " << signum << "\x1B[0m";
+    close();
     exit(signum);
 }
 
@@ -93,5 +97,6 @@ int main() {
         LOG(ERROR) << "\x1B[31m[MAIN] Error while connecting or executing commands on NAO: " << ex.what() << "\x1B[0m";
         return EXIT_FAILURE;
     }
+    close();
     return EXIT_SUCCESS;
 }

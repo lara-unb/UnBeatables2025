@@ -11,7 +11,5 @@ public:
     Speak();
     ~Speak();
 
-    void open();
-    void close();
     void say(const std::string &text);
 };

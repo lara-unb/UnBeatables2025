@@ -11,7 +11,6 @@ private:
 
 public:
     Perception();
-    ~Perception();
 
     void process() const;
     void close();
