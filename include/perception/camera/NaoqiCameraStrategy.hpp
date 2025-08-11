@@ -2,7 +2,6 @@
 
 #include "CameraStrategy.hpp"
 #include <alproxies/alvideodeviceproxy.h>
-#include <memory>
 #include <string>
 
 class NaoqiCameraStrategy : public CameraStrategy {

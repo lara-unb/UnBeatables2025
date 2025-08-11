@@ -1,11 +1,14 @@
 #pragma once
-#include <qi/session.hpp>
-#include <alproxies>
-#include <iostream>
+
+#include "action/speak/Speak.h"
 
 class Behavior {
-void speak(boost::shared_ptr<qi::Session> session, const std::string& text) {
-    try {
-        AL::ALTextToSpeechProxy tts(session, "ALTextToSpeech");
-        tts.say(text);}
+private:
+    Speak* speak;
+public:
+    Behavior();
+    ~Behavior();
+
+    void close();
+    void process();
 };
