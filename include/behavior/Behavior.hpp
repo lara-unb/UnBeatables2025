@@ -1,5 +1,15 @@
 #pragma once
 
-class Behavior {
+#include "action/motion/Motion.h"
+#include "action/speak/Speak.h"
 
+class Behavior {
+private:
+    Speak* speak;
+    Motion* motion;
+public:
+    Behavior();
+
+    void process() const;
+    void close();
 };

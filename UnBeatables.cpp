@@ -6,6 +6,7 @@
 #include "ConnectionConfig.hpp"
 #include "perception/Perception.hpp"
 #include "UnBoard.hpp"
+#include "behavior/Behavior.hpp"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -25,17 +26,26 @@ ConnectionConfig connectionConfig;
 qi::SessionPtr session;
 
 std::shared_ptr<Perception> perception;
+std::shared_ptr<Behavior> behavior;
 
-void signalHandler(int signum) {
-    LOG(WARNING) << "\x1B[32m[MAIN] Process interrupted by signal " << signum << "\x1B[0m";
+void close() {
     if (perception) {
         LOG(INFO) << "\x1B[32m[MAIN] Closing perception\x1B[0m";
         perception->close();
+    }
+    if (behavior) {
+        LOG(INFO) << "\x1B[32m[MAIN] Closing behavior\x1B[0m";
+        behavior->close();
     }
     if (session) {
         LOG(INFO) << "\x1B[32m[MAIN] Closing session\x1B[0m";
         session->close();
     }
+}
+
+void signalHandler(int signum) {
+    LOG(WARNING) << "\x1B[32m[MAIN] Process interrupted by signal " << signum << "\x1B[0m";
+    close();
     exit(signum);
 }
 
@@ -64,6 +74,12 @@ void configurePerception() {
     t.join();
 }
 
+void configureBehavior() {
+    behavior = std::make_shared<Behavior>();
+    std::thread t(&Behavior::process, behavior);
+    t.join();
+}
+
 int main() {
     std::signal(SIGINT, signalHandler);
 
@@ -74,11 +90,13 @@ int main() {
 
     try {
         configureSession();
-        configurePerception();
+        // configurePerception();
+        configureBehavior();
     }
     catch (const std::exception& ex) {
         LOG(ERROR) << "\x1B[31m[MAIN] Error while connecting or executing commands on NAO: " << ex.what() << "\x1B[0m";
         return EXIT_FAILURE;
     }
+    close();
     return EXIT_SUCCESS;
 }
