@@ -8,7 +8,7 @@ if ! command -v curl &>/dev/null; then
 fi
 echo "Curl instalado com sucesso: $(curl --version | awk '{print $2; exit}')"
 
-sudo apt-get install build-essential
+sudo apt-get install build-essential libopencv-dev
 
 if ! command -v cmake &>/dev/null; then
   echo "Instalando cmake..."
