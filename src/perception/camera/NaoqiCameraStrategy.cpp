@@ -3,7 +3,7 @@
 #include <perception/camera/NaoqiCameraStrategy.hpp>
 #include <opencv2/opencv.hpp>
 
-#include "EasyLogging.h"
+#include "Logs/EasyLogging.h"
 #include "ConnectionConfig.hpp"
 
 NaoqiCameraStrategy::NaoqiCameraStrategy()

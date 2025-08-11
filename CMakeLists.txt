@@ -4,7 +4,7 @@ project(exe CXX)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SDK_PATH "$ENV{HOME}/UnBeatables/naoqi-sdk-2.8.5.10-linux64" CACHE PATH "Path to NAOqi SDK")
+set(SDK_PATH "${CMAKE_SOURCE_DIR}/lib/NAOqi/naoqi-sdk-2.8.5.10-linux64" CACHE PATH "Path to NAOqi SDK")
 
 include_directories(
         ${SDK_PATH}/include
@@ -29,7 +29,7 @@ add_compile_options(
 link_directories(${SDK_PATH}/lib)
 
 file(GLOB_RECURSE SRC_FILES
-        "lib/EasyLogging.cc"
+        "lib/Logs/EasyLogging.cc"
         ${CMAKE_SOURCE_DIR}/src/*.cpp
         UnBeatables.cpp
 )
