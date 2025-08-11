@@ -1,6 +1,6 @@
 #include <perception/Perception.hpp>
 #include <UnBoard.hpp>
-#include "EasyLogging.h"
+#include "Logs/EasyLogging.h"
 
 Perception::Perception() {
     isRunning = false;
