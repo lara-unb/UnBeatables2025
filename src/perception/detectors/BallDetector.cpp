@@ -1,5 +1,5 @@
 #include <perception/detectors/BallDetector.hpp>
-#include "EasyLogging.h"
+#include "../../../lib/Logs/EasyLogging.h"
 
 BallDetector::BallDetector(const std::string& cascadePath) {
     if (!cascade.load(cascadePath)) {

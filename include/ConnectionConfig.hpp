@@ -4,7 +4,7 @@
 #include <qi/session.hpp>
 
 struct ConnectionConfig {
-    std::string ip = "127.0.0.2";
+    std::string ip = "127.0.0.1";
     int port = 9559;
 };
 

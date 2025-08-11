@@ -1,8 +1,8 @@
 #include <csignal>
 #include <thread>
 
-#include <EasyLogging.h>
-#include <NaoqiLog.cpp>
+#include <Logs/EasyLogging.h>
+#include <Logs/NaoqiLog.cpp>
 #include "ConnectionConfig.hpp"
 #include "perception/Perception.hpp"
 #include "UnBoard.hpp"
