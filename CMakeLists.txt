@@ -16,7 +16,22 @@ if(NOT EXISTS "${SDK_PATH}/include/alcommon/albroker.h")
 endif()
 
 # -----------------------------------------------------------
-# OpenCV (detecta automaticamente)
+# Libs do NAOqi
+# -----------------------------------------------------------
+link_directories(${SDK_PATH}/lib)
+file(GLOB SDK_LIBS "${SDK_PATH}/lib/lib*.so" "${SDK_PATH}/lib/lib*.a")
+
+set(LINK_LIBS "")
+foreach(libpath ${SDK_LIBS})
+    get_filename_component(libfile ${libpath} NAME)
+    string(REGEX REPLACE "^lib(.*)\\.(so|a)$" "\\1" libname ${libfile})
+    if(NOT libname STREQUAL "Qt5WebEngineCore")
+        list(APPEND LINK_LIBS "-l${libname}")
+    endif()
+endforeach()
+
+# -----------------------------------------------------------
+# OpenCV
 # -----------------------------------------------------------
 find_package(OpenCV REQUIRED)
 if(NOT OpenCV_FOUND)
@@ -53,21 +68,6 @@ add_compile_options(
 )
 
 # -----------------------------------------------------------
-# Libs do NAOqi
-# -----------------------------------------------------------
-link_directories(${SDK_PATH}/lib)
-file(GLOB SDK_LIBS "${SDK_PATH}/lib/lib*.so" "${SDK_PATH}/lib/lib*.a")
-
-set(LINK_LIBS "")
-foreach(libpath ${SDK_LIBS})
-    get_filename_component(libfile ${libpath} NAME)
-    string(REGEX REPLACE "^lib(.*)\\.(so|a)$" "\\1" libname ${libfile})
-    if(NOT libname STREQUAL "Qt5WebEngineCore")
-        list(APPEND LINK_LIBS "-l${libname}")
-    endif()
-endforeach()
-
-# -----------------------------------------------------------
 # Fontes
 # -----------------------------------------------------------
 file(GLOB_RECURSE SRC_FILES
@@ -79,19 +79,21 @@ file(GLOB_RECURSE SRC_FILES
 add_executable(exe ${SRC_FILES})
 
 # -----------------------------------------------------------
-# Definições e propriedades
-# -----------------------------------------------------------
-target_compile_definitions(exe PRIVATE USE_NAOQI)
-
-set_target_properties(exe PROPERTIES
-        LINK_FLAGS "-Wl,-rpath,${SDK_PATH}/lib"
-)
-
-# -----------------------------------------------------------
 # Linkagem final
 # -----------------------------------------------------------
 target_link_libraries(exe
         ${LINK_LIBS}
         ${OpenCV_LIBS}
         pthread
+)
+
+# -----------------------------------------------------------
+# Definições e propriedades
+# -----------------------------------------------------------
+set_target_properties(exe PROPERTIES
+        LINK_FLAGS "-Wl,-rpath,${SDK_PATH}/lib"
+)
+
+target_compile_definitions(exe PRIVATE
+        USE_NAOQI
 )
