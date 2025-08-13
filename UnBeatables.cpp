@@ -3,6 +3,7 @@
 
 #include <Logs/EasyLogging.h>
 #include <Logs/NaoqiLog.cpp>
+#include <Config/INIParser.cpp>
 #include "ConnectionConfig.hpp"
 #include "perception/Perception.hpp"
 #include "UnBoard.hpp"
@@ -13,7 +14,9 @@ INITIALIZE_EASYLOGGINGPP
 
 PerceptionBoard perceptionBoard;
 CommunicationBoard communicationBoard;
-ConnectionConfig connectionConfig;
+
+
+NAOqiAddress naoqiAddress;
 GameControllerAddress gameControllerAddress;
 qi::SessionPtr session;
 
@@ -50,8 +53,8 @@ void initLoggingSystem() {
 
 void initSession() {
     session = qi::makeSession();
-    LOG(INFO) << "\x1B[32m[MAIN] Connecting to " << connectionConfig.ip << ":" << connectionConfig.port;
-    auto connectFuture = session->connect("tcp://" + connectionConfig.ip + ":" + std::to_string(connectionConfig.port));
+    LOG(INFO) << "\x1B[32m[MAIN] Connecting to " << naoqiAddress.ip << ":" << naoqiAddress.port;
+    auto connectFuture = session->connect("tcp://" + naoqiAddress.ip + ":" + std::to_string(naoqiAddress.port));
 
     if (connectFuture.wait(3000) == qi::FutureState_Running)
         throw std::runtime_error("Connection timeout");
@@ -82,7 +85,7 @@ void initCommunication() {
 int main() {
     std::signal(SIGINT, signalHandler);
     initLoggingSystem();
-
+    loadConfig(naoqiAddress, gameControllerAddress);
     LOG(INFO) << "\x1B[32m[MAIN] Initializing Unboard\x1B[0m";
 
     try {

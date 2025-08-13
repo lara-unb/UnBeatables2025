@@ -77,6 +77,15 @@ foreach(libpath ${SDK_LIBS})
 endforeach()
 
 # -----------------------------------------------------------
+# config.ini
+# -----------------------------------------------------------
+add_custom_target(copy_config ALL
+        COMMAND ${CMAKE_COMMAND} -E copy
+        "${CMAKE_SOURCE_DIR}/config.ini"
+        "${CMAKE_BINARY_DIR}/config.ini"
+)
+
+# -----------------------------------------------------------
 # Fontes
 # -----------------------------------------------------------
 file(GLOB_RECURSE SRC_FILES
