@@ -4,6 +4,15 @@ project(exe CXX)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(BANNER "
+  _    _       ____             _        _     _
+ | |  | |     |  _ \\           | |      | |   | |
+ | |  | |_ __ | |_) | ___  __ _| |_ __ _| |__ | | ___  ___
+ | |  | | '_ \\|  _ < / _ \\/ _` | __/ _` | '_ \\| |/ _ \\/ __|
+ | |__| | | | | |_) |  __/ (_| | || (_| | |_) | |  __/\\__ \\
+  \\____/|_| |_|____/ \\___|\\__,_|\\__\\__,_|_.__/|_|\\___||___/
+")
+
 # -----------------------------------------------------------
 # Caminho do NAOqi SDK
 # -----------------------------------------------------------
@@ -11,8 +20,8 @@ set(SDK_PATH "${CMAKE_SOURCE_DIR}/lib/NAOqi/naoqi-sdk-2.8.5.10-linux64"
         CACHE PATH "Path to NAOqi SDK"
 )
 
-if(NOT EXISTS "${SDK_PATH}/include/alcommon/albroker.h")
-    message(FATAL_ERROR "NAOqi SDK não encontrado em: ${SDK_PATH}")
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/NAOqi/naoqi-sdk-2.8.5.10-linux64/include/alcommon/albroker.h")
+    message(FATAL_ERROR "NAOqi SDK não encontrado em: ${CMAKE_SOURCE_DIR}/lib/NAOqi/naoqi-sdk-2.8.5.10-linux64")
 endif()
 
 # -----------------------------------------------------------
@@ -81,7 +90,10 @@ add_executable(exe ${SRC_FILES})
 # -----------------------------------------------------------
 # Definições e propriedades
 # -----------------------------------------------------------
-target_compile_definitions(exe PRIVATE USE_NAOQI)
+target_compile_definitions(exe PRIVATE
+        USE_NAOQI
+        USE_UDP
+)
 
 set_target_properties(exe PROPERTIES
         LINK_FLAGS "-Wl,-rpath,${SDK_PATH}/lib"
@@ -90,6 +102,8 @@ set_target_properties(exe PROPERTIES
 # -----------------------------------------------------------
 # Linkagem final
 # -----------------------------------------------------------
+message(STATUS "${BANNER}")
+
 target_link_libraries(exe
         ${LINK_LIBS}
         ${OpenCV_LIBS}

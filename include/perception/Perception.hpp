@@ -11,7 +11,6 @@ private:
 
 public:
     Perception();
-
-    void process() const;
     void close();
+    void process() const;
 };

@@ -7,26 +7,19 @@
 #include "perception/Perception.hpp"
 #include "UnBoard.hpp"
 #include "behavior/Behavior.hpp"
+#include "communication/Communication.hpp"
 
 INITIALIZE_EASYLOGGINGPP
-
-std::string logo = R"(
-  _    _       ____             _        _     _
- | |  | |     |  _ \           | |      | |   | |
- | |  | |_ __ | |_) | ___  __ _| |_ __ _| |__ | | ___  ___
- | |  | | '_ \|  _ < / _ \/ _` | __/ _` | '_ \| |/ _ \/ __|
- | |__| | | | | |_) |  __/ (_| | || (_| | |_) | |  __/\__ \
-  \____/|_| |_|____/ \___|\__,_|\__\__,_|_.__/|_|\___||___/
-
-)";
 
 PerceptionBoard perceptionBoard;
 CommunicationBoard communicationBoard;
 ConnectionConfig connectionConfig;
+GameControllerAddress gameControllerAddress;
 qi::SessionPtr session;
 
 std::shared_ptr<Perception> perception;
 std::shared_ptr<Behavior> behavior;
+std::shared_ptr<Communication> communication;
 
 void close() {
     if (perception) {
@@ -49,13 +42,13 @@ void signalHandler(int signum) {
     exit(signum);
 }
 
-void configureLoggingSystem() {
+void initLoggingSystem() {
     el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format,
     "\x1B[36m %datetime %level [%logger]\x1B[0m \t%msg");
     redirectNaoqiLogsToEasyLogging();
 }
 
-void configureSession() {
+void initSession() {
     session = qi::makeSession();
     LOG(INFO) << "\x1B[32m[MAIN] Connecting to " << connectionConfig.ip << ":" << connectionConfig.port;
     auto connectFuture = session->connect("tcp://" + connectionConfig.ip + ":" + std::to_string(connectionConfig.port));
@@ -68,35 +61,40 @@ void configureSession() {
     LOG(INFO) << "\x1B[32m[MAIN] Successfully connected to NAOqi\x1B[0m";
 }
 
-void configurePerception() {
+void initPerception() {
     perception = std::make_shared<Perception>();
     std::thread t(&Perception::process, perception);
     t.join();
 }
 
-void configureBehavior() {
+void initBehavior() {
     behavior = std::make_shared<Behavior>();
     std::thread t(&Behavior::process, behavior);
     t.join();
 }
 
+void initCommunication() {
+    communication = std::make_shared<Communication>();
+    std::thread t(&Communication::process, communication);
+    t.join();
+}
+
 int main() {
     std::signal(SIGINT, signalHandler);
+    initLoggingSystem();
 
-    configureLoggingSystem();
-
-    LOG(INFO) << "\x1B[32m" << logo << "\x1B[0m";
     LOG(INFO) << "\x1B[32m[MAIN] Initializing Unboard\x1B[0m";
 
     try {
-        configureSession();
-        // configurePerception();
-        configureBehavior();
+        // initSession();
+        // initPerception();
+        // initBehavior();
+        initCommunication();
     }
     catch (const std::exception& ex) {
         LOG(ERROR) << "\x1B[31m[MAIN] Error while connecting or executing commands on NAO: " << ex.what() << "\x1B[0m";
+        close();
         return EXIT_FAILURE;
     }
-    close();
     return EXIT_SUCCESS;
 }

@@ -16,15 +16,14 @@ Perception::Perception() {
     ballDetector = new BallDetector("include/perception/cascade/cascade-2024-10.xml");
 }
 
+void Perception::close() {
+    isRunning = false;
+    camera->close();
+}
+
 void Perception::process() const {
     while (isRunning) {
         perceptionBoard.topCamera = ballDetector->detectBallTop(camera->getTopCamera());
         perceptionBoard.botCamera = ballDetector->detectBallBot(camera->getBotCamera());
     }
-}
-
-void Perception::close() {
-    if (!isRunning) return;
-    isRunning = false;
-    if (camera) camera->close();
 }
