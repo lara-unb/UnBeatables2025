@@ -6,8 +6,8 @@
 
 Communication::Communication() {
 #ifdef USE_UDP
-    client = new UDPClient(gameControllerAddress.ip, gameControllerAddress.port);
-    server = new UDPServer("0.0.0.0", gameControllerAddress.port);
+    client = new UDPClient(gameControllerAddress.ip, gameControllerAddress.writingPort);
+    server = new UDPServer("0.0.0.0", gameControllerAddress.readingPort);
 #else
     socket = new TCPSocket("", 1);
 #endif

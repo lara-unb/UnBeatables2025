@@ -10,7 +10,8 @@ struct ConnectionConfig {
 
 struct GameControllerAddress {
     const std::string ip = "192.168.42.128";
-    const int port = 3838;
+    const int writingPort = 3939;
+    const int readingPort = 3838;
 };
 
 extern ConnectionConfig connectionConfig;
