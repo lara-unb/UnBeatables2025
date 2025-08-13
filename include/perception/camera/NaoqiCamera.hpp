@@ -1,10 +1,10 @@
 #pragma once
 
-#include "CameraStrategy.hpp"
+#include "Camera.hpp"
 #include <alproxies/alvideodeviceproxy.h>
 #include <string>
 
-class NaoqiCameraStrategy : public CameraStrategy {
+class NaoqiCamera : public Camera {
 private:
     AL::ALVideoDeviceProxy videoService;
     std::string topClient = "cpp_client_top";
@@ -13,8 +13,8 @@ private:
     cv::Mat getCameraFrame(std::string& clientId);
 
 public:
-    NaoqiCameraStrategy();
-    ~NaoqiCameraStrategy() override;
+    NaoqiCamera();
+    ~NaoqiCamera() override;
 
     void open() override;
     void close() override;

@@ -20,7 +20,7 @@ BallPositionData BallDetector::detectBallTop(const cv::Mat& cameraFrame) {
             ((ball.y + ball.height / 2) / perceptionBoard.cameraHeight)
         };
     }
-    LOG(INFO) << "\x1B[31m[BALLDETECTORTOP] Ball not found\x1B[0m";
+    // LOG(INFO) << "\x1B[31m[BALLDETECTORTOP] Ball not found\x1B[0m";
     return BallPositionData{false, 0, 0};
 }
 
@@ -36,6 +36,6 @@ BallPositionData BallDetector::detectBallBot(const cv::Mat& cameraFrame) {
             ((ball.y + ball.height / 2) / perceptionBoard.cameraHeight)
         };
     }
-    LOG(INFO) << "\x1B[31m[BALLDETECTORBOT] Ball not found\x1B[0m";
+    // LOG(INFO) << "\x1B[31m[BALLDETECTORBOT] Ball not found\x1B[0m";
     return BallPositionData{false, 0, 0};
 }

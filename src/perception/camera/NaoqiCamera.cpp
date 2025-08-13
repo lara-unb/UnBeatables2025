@@ -1,22 +1,22 @@
 #include <alcommon/alproxy.h>
 #include <alvision/alimage.h>
-#include <perception/camera/NaoqiCameraStrategy.hpp>
+#include <perception/camera/NaoqiCamera.hpp>
 #include <opencv2/opencv.hpp>
 
 #include "Logs/EasyLogging.h"
 #include "ConnectionConfig.hpp"
 
-NaoqiCameraStrategy::NaoqiCameraStrategy()
+NaoqiCamera::NaoqiCamera()
     : videoService(boost::make_shared<AL::ALProxy>(session, "ALVideoDevice")) {
 
     LOG(INFO) << "\x1B[35m[CAMERA] Using the NAOqi camera\x1B[0m";
 }
 
-NaoqiCameraStrategy::~NaoqiCameraStrategy() {
-    NaoqiCameraStrategy::close();
+NaoqiCamera::~NaoqiCamera() {
+    NaoqiCamera::close();
 }
 
-void NaoqiCameraStrategy::open() {
+void NaoqiCamera::open() {
     LOG(INFO) << "\x1B[35m[CAMERA] Opening NAOqi cameras\x1B[0m";
     try {
         videoService.subscribeCamera(topClient, 0, AL::kQVGA, AL::kBGRColorSpace, 5);
@@ -26,7 +26,7 @@ void NaoqiCameraStrategy::open() {
     }
 }
 
-void NaoqiCameraStrategy::close() {
+void NaoqiCamera::close() {
     LOG(INFO) << "\x1B[35m[CAMERA] Closing NAOqi cameras\x1B[0m";
     try {
         videoService.unsubscribe(topClient);
@@ -36,11 +36,11 @@ void NaoqiCameraStrategy::close() {
     }
 }
 
-cv::Mat NaoqiCameraStrategy::getCameraFrame(std::string& clientId) {
+cv::Mat NaoqiCamera::getCameraFrame(std::string& clientId) {
     try {
         AL::ALValue img = videoService.getImageRemote(clientId);
         if (img.getType() == AL::ALValue::TypeInvalid || img.getSize() <= 6) {
-            LOG(WARNING) << "\x1B[35m[CAMERA] Invalid image data from client: " << clientId << "\x1B[0m";
+            // LOG(WARNING) << "\x1B[35m[CAMERA] Invalid image data from client: " << clientId << "\x1B[0m";
             return {};
         }
 
@@ -62,12 +62,12 @@ cv::Mat NaoqiCameraStrategy::getCameraFrame(std::string& clientId) {
     }
 }
 
-cv::Mat NaoqiCameraStrategy::getTopCamera() {
-    LOG(INFO) << "\x1B[35m[CAMERA] Getting top camera (NAOqi)\x1B[0m";
+cv::Mat NaoqiCamera::getTopCamera() {
+    // LOG(INFO) << "\x1B[35m[CAMERA] Getting top camera (NAOqi)\x1B[0m";
     return getCameraFrame(topClient);
 }
 
-cv::Mat NaoqiCameraStrategy::getBotCamera() {
-    LOG(INFO) << "\x1B[35m[CAMERA] Getting bottom camera (NAOqi)\x1B[0m";
+cv::Mat NaoqiCamera::getBotCamera() {
+    // LOG(INFO) << "\x1B[35m[CAMERA] Getting bottom camera (NAOqi)\x1B[0m";
     return getCameraFrame(bottomClient);
 }

@@ -1,11 +1,13 @@
 #include <perception/Perception.hpp>
 #include <UnBoard.hpp>
+#include <unistd.h>
+#include <perception/camera/NaoqiCamera.hpp>
 #include "Logs/EasyLogging.h"
 
 Perception::Perception() {
     isRunning = false;
 #ifdef USE_NAOQI
-    camera = new NaoqiCameraStrategy();
+    camera = new NaoqiCamera();
     isRunning = true;
 #else
     camera = nullptr;
@@ -16,15 +18,15 @@ Perception::Perception() {
     ballDetector = new BallDetector("include/perception/cascade/cascade-2024-10.xml");
 }
 
+void Perception::close() {
+    isRunning = false;
+    sleep(1);
+    camera->close();
+}
+
 void Perception::process() const {
     while (isRunning) {
         perceptionBoard.topCamera = ballDetector->detectBallTop(camera->getTopCamera());
         perceptionBoard.botCamera = ballDetector->detectBallBot(camera->getBotCamera());
     }
-}
-
-void Perception::close() {
-    if (!isRunning) return;
-    isRunning = false;
-    if (camera) camera->close();
 }

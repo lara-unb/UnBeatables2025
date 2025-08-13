@@ -1,17 +1,16 @@
 #pragma once
 
 #include "detectors/BallDetector.hpp"
-#include "camera/NaoqiCameraStrategy.hpp"
+#include "camera/Camera.hpp"
 
 class Perception {
 private:
-    CameraStrategy *camera;
+    Camera *camera;
     BallDetector *ballDetector;
     std::atomic<bool> isRunning;
 
 public:
     Perception();
-
-    void process() const;
     void close();
+    void process() const;
 };

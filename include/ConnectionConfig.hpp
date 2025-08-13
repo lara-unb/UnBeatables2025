@@ -3,10 +3,17 @@
 #include <string>
 #include <qi/session.hpp>
 
-struct ConnectionConfig {
-    std::string ip = "127.0.0.1";
-    int port = 9559;
+struct NAOqiAddress {
+    std::string ip;
+    int port;
 };
 
-extern ConnectionConfig connectionConfig;
+struct GameControllerAddress {
+    std::string ip;
+    int writingPort;
+    int readingPort;
+};
+
+extern NAOqiAddress naoqiAddress;
+extern GameControllerAddress gameControllerAddress;
 extern qi::SessionPtr session;
