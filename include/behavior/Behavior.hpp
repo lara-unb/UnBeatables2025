@@ -9,6 +9,6 @@ private:
     Motion* motion;
 public:
     Behavior();
-    void close();
+    void close() const;
     void process() const;
 };

@@ -1,11 +1,13 @@
 #include <perception/Perception.hpp>
 #include <UnBoard.hpp>
+#include <unistd.h>
+#include <perception/camera/NaoqiCamera.hpp>
 #include "Logs/EasyLogging.h"
 
 Perception::Perception() {
     isRunning = false;
 #ifdef USE_NAOQI
-    camera = new NaoqiCameraStrategy();
+    camera = new NaoqiCamera();
     isRunning = true;
 #else
     camera = nullptr;
@@ -18,6 +20,7 @@ Perception::Perception() {
 
 void Perception::close() {
     isRunning = false;
+    sleep(1);
     camera->close();
 }
 

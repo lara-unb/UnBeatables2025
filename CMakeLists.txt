@@ -91,7 +91,7 @@ add_custom_target(copy_config ALL
 file(GLOB_RECURSE SRC_FILES
         "lib/Logs/EasyLogging.cc"
         ${CMAKE_SOURCE_DIR}/src/*.cpp
-        UnBeatables.cpp
+        Main.cpp
 )
 
 add_executable(exe ${SRC_FILES})

@@ -1,19 +1,18 @@
 #include <behavior/Behavior.hpp>
-#include <unistd.h>
 #include "action/motion/Motion.h"
+#include <unistd.h>
 
 Behavior::Behavior() {
-    // speak = new Speak();
+    speak = new Speak();
     motion = new Motion();
 }
 
-void Behavior::close() {
-    // speak->close();
+void Behavior::close() const {
     sleep(1);
     motion->rest();
 }
 
 void Behavior::process() const{
     motion->wakeUp();
-    // speak->say("i");
+    speak->say("Ola UnBeatables");
 }

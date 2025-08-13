@@ -1,7 +1,4 @@
-#progma once
-
-#include "UnBoard.hpp"
-#include "ConnectionConfig.hpp"
+#pragma once
 
 #include "perception/Perception.hpp"
 #include "behavior/Behavior.hpp"
@@ -9,25 +6,14 @@
 
 class UnBeatables {
 private:
-    NAOqiAddress naoqiAddress;
-    GameControllerAddress gameControllerAddress;
-    qi::SessionPtr session;
+    Perception* perception;
+    Behavior* behavior;
+    Communication* communication;
 
-    PerceptionBoard perceptionBoard;
-    CommunicationBoard communicationBoard;
+    void initSession();
 
-    std::shared_ptr<Perception> perception;
-    std::shared_ptr<Behavior> behavior;
-    std::shared_ptr<Communication> communication;
-
-	void setConfig();
-
-	void initSession();
-	void initCommunication();
-	void initPerception();
-	void initBehavior();
 public:
     UnBeatables();
-	void close();
-	void process();
+	void close() const;
+	void process() const;
 };
