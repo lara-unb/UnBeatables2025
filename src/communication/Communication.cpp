@@ -1,4 +1,6 @@
 #include "communication/Communication.hpp"
+
+#include <UnBoard.hpp>
 #include <unistd.h>
 #include "Logs/EasyLogging.h"
 #include "ConnectionConfig.hpp"
@@ -26,6 +28,7 @@ void Communication::close() {
 void Communication::process() const {
     while (isRunning) {
         // LOG(INFO) << "\x1B[93m[COMMUNICATION] Data received from Gamecontroler: \x1B[0m";
-        gameController->adapterData(server->receiveData());
+        roboCupBoard = gameController->adapterData(server->receiveData());
+        sleep(1);
     }
 }

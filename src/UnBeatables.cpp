@@ -11,12 +11,13 @@ qi::SessionPtr session;
 
 PerceptionBoard perceptionBoard;
 CommunicationBoard communicationBoard;
+RoboCupGameControlData roboCupBoard;
 
 UnBeatables::UnBeatables() {
     LOG(INFO) << "\x1B[32m[MAIN] Initializing UnBeatables\x1B[0m";
-    initSession();
-    perception = new Perception();
-    behavior = new Behavior();
+    // initSession();
+    // perception = new Perception();
+    // behavior = new Behavior();
     communication = new Communication();
 }
 
@@ -40,12 +41,12 @@ void UnBeatables::close() const {
 }
 
 void UnBeatables::process() const{
-    std::thread t1([this] { perception->process(); });
-    std::thread t2([this] { behavior->process(); });
+    // std::thread t1([this] { perception->process(); });
+    // std::thread t2([this] { behavior->process(); });
     std::thread t3([this] { communication->process(); });
 
-    t1.join();
-    t2.join();
+    // t1.join();
+    // t2.join();
     t3.join();
 }
 

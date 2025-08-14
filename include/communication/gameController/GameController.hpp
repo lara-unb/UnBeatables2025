@@ -6,6 +6,7 @@
 
 class GameController {
 private:
+	RoboCupGameControlData roboCupData{};
 public:
     GameController();
 	RoboCupGameControlData adapterData(std::vector<uint8_t> data);

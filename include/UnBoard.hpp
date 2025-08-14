@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <atomic>
+#include <communication/gameController/RoboCupGameControlData.h>
 
 using namespace std;
 
@@ -36,3 +37,5 @@ struct CommunicationBoard {
     atomic<int16_t> secsTillUnpenalised;
 };
 extern CommunicationBoard communicationBoard;
+
+extern RoboCupGameControlData roboCupBoard;
