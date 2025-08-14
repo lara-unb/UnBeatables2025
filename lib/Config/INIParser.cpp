@@ -1,8 +1,9 @@
 #include <fstream>
 #include <string>
 #include "ConnectionConfig.hpp"
+#include "UnBoard.hpp"
 
-void loadConfig(NAOqiAddress& conn, GameControllerAddress& gc) {
+void loadConfig() {
     std::ifstream file("config.ini");
     if (!file)
         throw std::runtime_error("Fail to open config.ini");
@@ -15,10 +16,12 @@ void loadConfig(NAOqiAddress& conn, GameControllerAddress& gc) {
         std::string key = line.substr(0, pos);
         std::string value = line.substr(pos + 1);
 
-        if (key == "NAOqiIP") conn.ip = value;
-        else if (key == "NAOqiPort") conn.port = std::stoi(value);
-        else if (key == "gameControllerIP") gc.ip = value;
-        else if (key == "writingPort") gc.writingPort = std::stoi(value);
-        else if (key == "readingPort") gc.readingPort = std::stoi(value);
+        if (key == "NAOqiIP") naoqiAddress.ip = value;
+        else if (key == "NAOqiPort") naoqiAddress.port = std::stoi(value);
+        else if (key == "gameControllerIP") gameControllerAddress.ip = value;
+        else if (key == "writingPort") gameControllerAddress.writingPort = std::stoi(value);
+        else if (key == "readingPort") gameControllerAddress.readingPort = std::stoi(value);
+        else if (key == "unbeatablesNumber") unbeatablesReturnBoard.teamNum = std::stoi(value);
+        else if (key == "playerNumber") unbeatablesReturnBoard.playerNum  = std::stoi(value);
     }
 }

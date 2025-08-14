@@ -27,8 +27,8 @@ void Communication::close() {
 
 void Communication::process() const {
     while (isRunning) {
-        // LOG(INFO) << "\x1B[93m[COMMUNICATION] Data received from Gamecontroler: \x1B[0m";
-        roboCupBoard = gameController->adapterData(server->receiveData());
+        roboCupControlBoard = gameController->adapterControlData(server->receiveData());
+        client->sendData(gameController->adapterReturnData(*reinterpret_cast<RoboCupGameControlReturnData*>(&unbeatablesReturnBoard)));
         sleep(1);
     }
 }

@@ -14,6 +14,7 @@ UDPClient::UDPClient(const std::string& ip, int port) {
 
     if (inet_pton(AF_INET, ip.c_str(), &addr.sin_addr) <= 0)
         throw std::runtime_error("Invalid ip address");
+    clientName =  ip + ":" + std::to_string(port);
 }
 
 UDPClient::~UDPClient() {
@@ -21,9 +22,9 @@ UDPClient::~UDPClient() {
     close(sockfd);
 }
 
-void UDPClient::sendData(const std::string& data) {
-    ssize_t sent = sendto(sockfd, data.c_str(), data.size(), 0, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr));
+void UDPClient::sendData(const std::vector<uint8_t>& data) {
+    ssize_t sent = sendto(sockfd, data.data(), data.size(), 0, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr));
     if (sent != static_cast<ssize_t>(data.size()))
         throw std::runtime_error("Fail to send message");
-    LOG(INFO) << "\x1B[93m[UDPClient] Sending: " << data << "\x1B[0m";
+    LOG(INFO) << "\x1B[93m[UDPClient] Sending UnBeatablesReturnBoard to (" << clientName <<")\x1B[0m";
 }

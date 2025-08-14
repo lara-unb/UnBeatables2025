@@ -9,6 +9,6 @@ TCPClient::~TCPClient() {
 
 }
 
-void TCPClient::sendData(const std::string& data) {
+void TCPClient::sendData(const std::vector<uint8_t>& data) {
 
 }

@@ -6,7 +6,14 @@ GameController::GameController() {
     LOG(INFO) << "\x1B[93m[GAMECONTROLLER] Starting Game Controller\x1B[0m";
 }
 
-RoboCupGameControlData GameController::adapterData(std::vector<uint8_t> data) {
+std::vector<uint8_t> GameController::adapterReturnData(const RoboCupGameControlReturnData& data) {
+    constexpr size_t structSize = sizeof(RoboCupGameControlReturnData);
+    std::vector<uint8_t> bytes(structSize);
+    std::memcpy(bytes.data(), &data, structSize);
+    return bytes;
+}
+
+RoboCupGameControlData GameController::adapterControlData(std::vector<uint8_t> data) {
     if (data.size() < sizeof(RoboCupGameControlData)) {
         LOG(INFO) << "\x1B[35m[GAMECONTROLLER] Smaller package than expected!\x1B[0m";
         return roboCupData;

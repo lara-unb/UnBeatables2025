@@ -9,5 +9,6 @@ private:
 	RoboCupGameControlData roboCupData{};
 public:
     GameController();
-	RoboCupGameControlData adapterData(std::vector<uint8_t> data);
+	RoboCupGameControlData adapterControlData(std::vector<uint8_t> data);
+	std::vector<uint8_t> adapterReturnData(const RoboCupGameControlReturnData& data);
 };

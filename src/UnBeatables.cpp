@@ -10,7 +10,8 @@ GameControllerAddress gameControllerAddress;
 qi::SessionPtr session;
 
 PerceptionBoard perceptionBoard;
-RoboCupGameControlData roboCupBoard;
+RoboCupGameControlData roboCupControlBoard;
+UnBeatablesReturnBoard unbeatablesReturnBoard;
 
 UnBeatables::UnBeatables() {
     LOG(INFO) << "\x1B[32m[MAIN] Initializing UnBeatables\x1B[0m";

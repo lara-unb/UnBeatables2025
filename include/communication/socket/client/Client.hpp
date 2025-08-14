@@ -1,14 +1,15 @@
 #pragma once
 
-#include <string>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <cstring>
 #include <netinet/in.h>
+#include <cstdint>
+#include <string>
+#include <vector>
 
 class Client {
 public:
     virtual ~Client() = default;
-    virtual void sendData(const std::string& data) = 0;
+    virtual void sendData(const std::vector<uint8_t>& data) = 0;
 };
 
