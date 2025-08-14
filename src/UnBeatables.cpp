@@ -10,7 +10,6 @@ GameControllerAddress gameControllerAddress;
 qi::SessionPtr session;
 
 PerceptionBoard perceptionBoard;
-CommunicationBoard communicationBoard;
 RoboCupGameControlData roboCupBoard;
 
 UnBeatables::UnBeatables() {
