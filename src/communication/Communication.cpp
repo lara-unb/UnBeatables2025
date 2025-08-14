@@ -1,5 +1,6 @@
 #include "communication/Communication.hpp"
-
+#include <unistd.h>
+#include "Logs/EasyLogging.h"
 #include "ConnectionConfig.hpp"
 #include "communication/socket/client/UDPClient.hpp"
 #include "communication/socket/server/UDPServer.hpp"
@@ -12,17 +13,19 @@ Communication::Communication() {
     socket = new TCPSocket("", 1);
 #endif
     isRunning = true;
+    gameController = new GameController();
 }
 
 void Communication::close() {
     isRunning = false;
+    sleep(1);
     delete client;
     delete server;
 }
 
 void Communication::process() const {
-    // while (isRunning) {
-        client->sendData("teste");
-        server->receiveData();
-    // }
+    while (isRunning) {
+        // LOG(INFO) << "\x1B[93m[COMMUNICATION] Data received from Gamecontroler: \x1B[0m";
+        gameController->adapterData(server->receiveData());
+    }
 }

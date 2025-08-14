@@ -1,5 +1,4 @@
 #include "communication/socket/server/UDPServer.hpp"
-
 #include "Logs/EasyLogging.h"
 
 UDPServer::UDPServer(const std::string& ip, int port) {
@@ -17,23 +16,22 @@ UDPServer::UDPServer(const std::string& ip, int port) {
     if (bind(sockfd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) < 0) {
         throw std::runtime_error("UDP server bind error");
     }
+    serverName =  ip + ":" + std::to_string(port);
 }
 
 UDPServer::~UDPServer() {
-    LOG(INFO) << "\x1B[93m[UDPClient] Closing UDP server\x1B[0m";
+    LOG(INFO) << "\x1B[93m[UDPServer] Closing UDP server\x1B[0m";
     close(sockfd);
 }
 
-std::string UDPServer::receiveData() {
+std::vector<uint8_t> UDPServer::receiveData() {
     char buffer[1024];
     socklen_t clientLen = sizeof(addr);
-    ssize_t recvLen = recvfrom(sockfd, buffer, sizeof(buffer) - 1, 0, reinterpret_cast<struct sockaddr *>(&addr), &clientLen);
+    ssize_t recvLen = recvfrom(sockfd, buffer, sizeof(buffer), 0, reinterpret_cast<struct sockaddr *>(&addr), &clientLen);
     if (recvLen < 0) {
         LOG(INFO) << "Error receiving UDP data";
-        return "";
+        return {};
     }
-    buffer[recvLen] = '\0';
-    std::string data = std::string(buffer);
-    LOG(INFO) << "\x1B[93m[UDPClient] Receives: " << data << "\x1B[0m";
-    return data;
+    LOG(INFO) << "\x1B[93m[UDPServer] Data received from (" << serverName << ") \x1B[0m";
+    return std::vector<uint8_t>(buffer, buffer + recvLen);
 }

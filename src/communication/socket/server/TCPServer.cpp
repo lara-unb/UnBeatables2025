@@ -10,6 +10,6 @@ TCPServer::~TCPServer() {
 
 }
 
-std::string TCPServer::receiveData() {
-    return "oi";
+std::vector<uint8_t> TCPServer::receiveData() {
+    return {};
 }

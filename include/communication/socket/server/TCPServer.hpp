@@ -13,6 +13,6 @@ public:
     TCPServer(const std::string& host, int port);
     ~TCPServer() override;
 
-    std::string receiveData() override;
+    std::vector<uint8_t> receiveData() override;
 };
 
