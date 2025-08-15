@@ -12,6 +12,8 @@ struct GameControllerAddress {
     std::string ip;
     int writingPort;
     int readingPort;
+    int teamPort;
+    std::string broadcast;
 };
 
 extern NAOqiAddress naoqiAddress;

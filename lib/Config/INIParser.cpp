@@ -21,6 +21,8 @@ void loadConfig() {
         else if (key == "gameControllerIP") gameControllerAddress.ip = value;
         else if (key == "writingPort") gameControllerAddress.writingPort = std::stoi(value);
         else if (key == "readingPort") gameControllerAddress.readingPort = std::stoi(value);
+        else if (key == "teamPort") gameControllerAddress.teamPort = std::stoi(value);
+        else if (key == "broadcast") gameControllerAddress.broadcast = value;
         else if (key == "unbeatablesNumber") unbeatablesReturnBoard.teamNum = std::stoi(value);
         else if (key == "playerNumber") unbeatablesReturnBoard.playerNum  = std::stoi(value);
         else if (key == "camera") systemSettings.camera = std::stoi(value);

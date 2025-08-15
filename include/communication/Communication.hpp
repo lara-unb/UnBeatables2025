@@ -7,12 +7,12 @@
 
 class Communication {
 private:
-    Client *client;
-    Server *server;
+    Client *gameControllerClient;
+    Server *gameControllerServer;
     GameController *gameController;
     std::atomic<bool> isRunning{};
 public:
-    Communication();
+    Communication(GameController* gamecontroller, Client* gameControllerClient, Server* gameControllerServer);
     void process() const;
     void close();
 };

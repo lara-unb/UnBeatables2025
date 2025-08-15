@@ -13,6 +13,7 @@ public:
     TCPClient(const std::string& host, int port);
     ~TCPClient() override;
 
-    void sendData(const std::vector<uint8_t>& data) override;
+    void sendUnicast(const std::vector<uint8_t>& data) override;
+    void sendBroadcast(const std::vector<uint8_t>& data) override;
 };
 

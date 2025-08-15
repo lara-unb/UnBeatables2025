@@ -7,29 +7,24 @@
 #include "communication/socket/client/UDPClient.hpp"
 #include "communication/socket/server/UDPServer.hpp"
 
-Communication::Communication() {
-#ifdef USE_UDP
-    client = new UDPClient(gameControllerAddress.ip, gameControllerAddress.writingPort);
-    server = new UDPServer("0.0.0.0", gameControllerAddress.readingPort);
-#else
-    socket = new TCPSocket("", 1);
-#endif
+Communication::Communication(GameController* gamecontroller, Client* gameControllerClient, Server* gameControllerServer):
+gameController(gamecontroller), gameControllerClient(gameControllerClient), gameControllerServer(gameControllerServer)
+{
     isRunning = true;
-    gameController = new GameController();
 }
 
 void Communication::close() {
     isRunning = false;
     sleep(1);
-    delete client;
-    delete server;
+    delete gameControllerClient;
+    delete gameControllerServer;
 }
 
 void Communication::process() const {
     while (isRunning) {
-        client->sendData(gameController->adapterReturnData(unbeatablesReturnBoard));
+        gameControllerClient->sendUnicast(gameController->adapterReturnData(unbeatablesReturnBoard));
 
-        std::vector<uint8_t> data = server->receiveData();
+        std::vector<uint8_t> data = gameControllerServer->receiveData();
         if (data.size() >= sizeof(RoboCupGameControlData))
             std::memcpy(&roboCupControlBoard, data.data(), sizeof(RoboCupGameControlData));
 

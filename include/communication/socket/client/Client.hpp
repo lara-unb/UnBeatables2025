@@ -10,6 +10,7 @@
 class Client {
 public:
     virtual ~Client() = default;
-    virtual void sendData(const std::vector<uint8_t>& data) = 0;
+    virtual void sendUnicast(const std::vector<uint8_t>& data) = 0;
+    virtual void sendBroadcast(const std::vector<uint8_t>& data) = 0;
 };
 

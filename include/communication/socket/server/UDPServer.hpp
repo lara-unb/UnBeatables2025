@@ -8,10 +8,11 @@ class UDPServer : public Server {
 private:
     sockaddr_in addr {};
     int sockfd = -1;
-    std::string serverName;
+    bool hasSecurityIP = false;
+    std::string allowedIP;
 
 public:
-    UDPServer(const std::string& host, int port);
+    UDPServer(const std::string& host, int port, const std::string& securityIP = "");
     ~UDPServer() override;
 
     std::vector<uint8_t> receiveData() override;
