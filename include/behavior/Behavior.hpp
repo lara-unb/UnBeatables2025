@@ -7,8 +7,16 @@ class Behavior {
 private:
     Speak* speak;
     Motion* motion;
+    std::atomic<bool> isRunning{};
+
+    void gameControllerBehavior();
+    void competitionPhase();
+    void competitionType();
+    void gamePhase();
+    void gameState();
+    void gamePlay();
 public:
     Behavior();
-    void close() const;
-    void process() const;
+    void close();
+    void process();
 };
