@@ -4,7 +4,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "Logs/EasyLogging.h"
-#include "ConnectionConfig.hpp"
+#include "ConnectionSettings.hpp"
 
 NaoqiCamera::NaoqiCamera()
     : videoService(boost::make_shared<AL::ALProxy>(session, "ALVideoDevice")) {

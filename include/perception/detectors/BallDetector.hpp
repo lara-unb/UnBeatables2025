@@ -11,7 +11,7 @@ private:
     std::vector<cv::Rect> detectedBallBot;
 
 public:
-    BallDetector(const std::string& cascadePath);
+    BallDetector(std::string& cascadePath);
     ~BallDetector() = default;
 
     BallPositionData detectBallTop(const cv::Mat& cameraFrame);

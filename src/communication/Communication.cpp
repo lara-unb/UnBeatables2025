@@ -3,7 +3,7 @@
 #include <UnBoard.hpp>
 #include <unistd.h>
 #include "Logs/EasyLogging.h"
-#include "ConnectionConfig.hpp"
+#include "ConnectionSettings.hpp"
 #include "communication/socket/client/UDPClient.hpp"
 #include "communication/socket/server/UDPServer.hpp"
 
@@ -27,8 +27,12 @@ void Communication::close() {
 
 void Communication::process() const {
     while (isRunning) {
-        roboCupControlBoard = gameController->adapterControlData(server->receiveData());
-        client->sendData(gameController->adapterReturnData(*reinterpret_cast<RoboCupGameControlReturnData*>(&unbeatablesReturnBoard)));
-        sleep(1);
+        client->sendData(gameController->adapterReturnData(unbeatablesReturnBoard));
+
+        std::vector<uint8_t> data = server->receiveData();
+        if (data.size() >= sizeof(RoboCupGameControlData))
+            std::memcpy(&roboCupControlBoard, data.data(), sizeof(RoboCupGameControlData));
+
+        sleep(0.5);
     }
 }

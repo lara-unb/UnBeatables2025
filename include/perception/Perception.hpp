@@ -10,7 +10,7 @@ private:
     std::atomic<bool> isRunning;
 
 public:
-    Perception();
+    Perception(Camera *camera, BallDetector *ballDetector);
     void close();
     void process() const;
 };

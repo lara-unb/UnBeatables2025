@@ -27,7 +27,7 @@ struct PerceptionBoard {
 
 struct UnBeatablesReturnBoard {
     char header[4] = {'R', 'G', 'r', 't'};
-    const uint8_t version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
+    uint8_t version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
     uint8_t playerNum = 1;
     uint8_t teamNum = UNBEATABLES_NUMBER;
     uint8_t fallen = ROBOT_STATUS_UPRIGHT;

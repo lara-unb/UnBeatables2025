@@ -1,6 +1,6 @@
 #include <fstream>
 #include <string>
-#include "ConnectionConfig.hpp"
+#include "ConnectionSettings.hpp"
 #include "UnBoard.hpp"
 
 void loadConfig() {
@@ -23,5 +23,8 @@ void loadConfig() {
         else if (key == "readingPort") gameControllerAddress.readingPort = std::stoi(value);
         else if (key == "unbeatablesNumber") unbeatablesReturnBoard.teamNum = std::stoi(value);
         else if (key == "playerNumber") unbeatablesReturnBoard.playerNum  = std::stoi(value);
+        else if (key == "camera") systemSettings.camera = std::stoi(value);
+        else if (key == "cascade") systemSettings.cascade = value;
+        else if (key == "network") systemSettings.network = std::stoi(value);
     }
 }

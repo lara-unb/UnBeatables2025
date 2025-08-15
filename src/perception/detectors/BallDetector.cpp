@@ -1,7 +1,8 @@
 #include <perception/detectors/BallDetector.hpp>
 #include "Logs/EasyLogging.h"
 
-BallDetector::BallDetector(const std::string& cascadePath) {
+BallDetector::BallDetector(std::string& cascadePath) {
+    cascadePath = "include/perception/cascade/" + cascadePath;
     if (!cascade.load(cascadePath)) {
         LOG(ERROR) << "Failed to load cascade from: " << cascadePath;
         throw std::runtime_error("Failed to load cascade (File: " + std::string(__FILE__) + ", Line: " + std::to_string(__LINE__) + ")");

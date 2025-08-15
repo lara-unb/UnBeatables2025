@@ -6,10 +6,11 @@ GameController::GameController() {
     LOG(INFO) << "\x1B[93m[GAMECONTROLLER] Starting Game Controller\x1B[0m";
 }
 
-std::vector<uint8_t> GameController::adapterReturnData(const RoboCupGameControlReturnData& data) {
+std::vector<uint8_t> GameController::adapterReturnData(const UnBeatablesReturnBoard& data) {
+    std::memcpy(&roboCupReturnData, &data, sizeof(RoboCupGameControlReturnData));
     constexpr size_t structSize = sizeof(RoboCupGameControlReturnData);
     std::vector<uint8_t> bytes(structSize);
-    std::memcpy(bytes.data(), &data, structSize);
+    std::memcpy(bytes.data(), &roboCupReturnData, structSize);
     return bytes;
 }
 
