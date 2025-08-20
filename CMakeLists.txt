@@ -99,10 +99,7 @@ add_executable(exe ${SRC_FILES})
 # -----------------------------------------------------------
 # Definições e propriedades
 # -----------------------------------------------------------
-target_compile_definitions(exe PRIVATE
-        USE_NAOQI
-        USE_UDP
-)
+target_compile_definitions(exe PRIVATE)
 
 set_target_properties(exe PROPERTIES
         LINK_FLAGS "-Wl,-rpath,${SDK_PATH}/lib"

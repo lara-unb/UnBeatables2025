@@ -49,30 +49,46 @@ Communication* Builder::buildCommunication(){
         case UDP_NETWORK:
             LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using UDP Socket\x1B[0m";
             gameControllerClient.reset(new UDPClient(
-                gameControllerAddress.ip,
+                gameControllerAddress.host,
                 gameControllerAddress.writingPort,
-                gameControllerAddress.broadcast));
+                Mode::UNICAST));
 
             gameControllerServer.reset(new UDPServer(
-                "0.0.0.0",
                 gameControllerAddress.readingPort,
-                gameControllerAddress.ip));
+                Mode2::UNICAST,
+                gameControllerAddress.host));
 
-            //teamClient.reset(new UDPClient(
-             //   gameControllerAddress.ip,
-             //   gameControllerAddress.teamPort + unbeatablesReturnBoard.teamNum,
-             //   gameControllerAddress.broadcast));
+            teamClient.reset(new UDPClient(
+                gameControllerAddress.host,
+                teamCommunicationAddress.teamPort,
+                Mode::BROADCAST));
 
-            //teamServer.reset(new UDPServer(
-               // "0.0.0.0",
-               // gameControllerAddress.teamPort + unbeatablesReturnBoard.teamNum));
+            teamServer.reset(new UDPServer(
+                teamCommunicationAddress.teamPort,
+                Mode2::BROADCAST,
+                teamCommunicationAddress.multicast));
             break;
         case TCP_NETWORK:
             LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using TCP Socket\x1B[0m";
-            //gameControllerClient.reset(new TCPClient(gameControllerAddress.ip, gameControllerAddress.writingPort));
-            //gameControllerServer.reset(new TCPClient("0.0.0.0", gameControllerAddress.readingPort));
-            //teamClient.reset(new TCPClient(gameControllerAddress.ip, gameControllerAddress.writingPort));
-            //teamServer.reset(new TCPClient("0.0.0.0", gameControllerAddress.readingPort));
+            // gameControllerClient.reset(new TCPClient(
+            //     gameControllerAddress.host,
+            //     gameControllerAddress.writingPort,
+            //     Mode::UNICAST));
+            //
+            // gameControllerServer.reset(new TCPServer(
+            //     "0.0.0.0",
+            //     gameControllerAddress.readingPort,
+            //     Mode::UNICAST));
+            //
+            // teamClient.reset(new TCPClient(
+            //     teamCommunicationAddress.broadcast,
+            //     teamCommunicationAddress.teamPort,
+            //     Mode::BROADCAST));
+            //
+            // teamServer.reset(new TCPServer(
+            //     "0.0.0.0",
+            //     teamCommunicationAddress.teamPort,
+            //     Mode::BROADCAST));
             break;
         default:
             throw std::runtime_error("Network strategy not found");

@@ -1,30 +1,30 @@
 #include <Logs/EasyLogging.h>
-
 #include <thread>
 #include "UnBeatables.hpp"
 #include <ConnectionSettings.hpp>
 #include <UnBoard.hpp>
 
-// GLOBAL CONNECTION ATTRIBUTES
+// GLOBAL CONNECTION VARIABLES
 NAOqiAddress naoqiAddress;
 GameControllerAddress gameControllerAddress;
+TeamCommunicationAddress teamCommunicationAddress;
 qi::SessionPtr session;
 
-// GLOBAL BLACKBOARD ATTRIBUTES
+// GLOBAL BLACKBOARD VARIABLES
 PerceptionBoard perceptionBoard;
 RoboCupGameControlData roboCupControlBoard;
 UnBeatablesReturnBoard unbeatablesReturnBoard;
 
-// GLOBAL STRATEGIES ATTRIBUTES
+// GLOBAL STRATEGIES VARIABLES
 SystemSettings systemSettings;
 
 UnBeatables::UnBeatables() {
     LOG(INFO) << "\x1B[32m[MAIN] Initializing UnBeatables\x1B[0m";
     initSession();
     builder = new Builder;
+    communication = builder->buildCommunication();
     perception = builder->buildPerception();
     behavior = builder->buildBehavior();
-    communication = builder->buildCommunication();
 }
 
 void UnBeatables::close() const {

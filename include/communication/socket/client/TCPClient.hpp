@@ -10,10 +10,20 @@ private:
     int sockfd = -1;
 
 public:
-    TCPClient(const std::string& host, int port);
+    TCPClient(const std::string& host, int port, Mode customizableMode);
     ~TCPClient() override;
 
-    void sendUnicast(const std::vector<uint8_t>& data) override;
-    void sendBroadcast(const std::vector<uint8_t>& data) override;
+    void sendData(const std::vector<uint8_t>& data) override;
+
+    void activeBroadcast() override;
+    void activeMulticast() override;
+    void activeUnicast() override;
+
+    std::string getBroadcastAddress() const override;
+    std::string getMulticastAddress() const override;
+
+    void setBroadcastAddress(const std::string& addr) override;
+    void setMulticastAddress(const std::string& addr) override;
+
 };
 

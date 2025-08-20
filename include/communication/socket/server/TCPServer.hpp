@@ -15,4 +15,3 @@ public:
 
     std::vector<uint8_t> receiveData() override;
 };
-

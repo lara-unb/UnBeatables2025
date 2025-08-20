@@ -9,13 +9,18 @@ struct NAOqiAddress {
 };
 
 struct GameControllerAddress {
-    std::string ip;
+    std::string host;
     int writingPort;
     int readingPort;
-    int teamPort;
+};
+
+struct TeamCommunicationAddress {
+    std::string multicast;
     std::string broadcast;
+    int teamPort;
 };
 
 extern NAOqiAddress naoqiAddress;
 extern GameControllerAddress gameControllerAddress;
+extern TeamCommunicationAddress teamCommunicationAddress;
 extern qi::SessionPtr session;

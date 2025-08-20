@@ -18,11 +18,12 @@ void loadConfig() {
 
         if (key == "NAOqiIP") naoqiAddress.ip = value;
         else if (key == "NAOqiPort") naoqiAddress.port = std::stoi(value);
-        else if (key == "gameControllerIP") gameControllerAddress.ip = value;
+        else if (key == "gameControllerIP") gameControllerAddress.host = value;
         else if (key == "writingPort") gameControllerAddress.writingPort = std::stoi(value);
         else if (key == "readingPort") gameControllerAddress.readingPort = std::stoi(value);
-        else if (key == "teamPort") gameControllerAddress.teamPort = std::stoi(value);
-        else if (key == "broadcast") gameControllerAddress.broadcast = value;
+        else if (key == "broadcast") teamCommunicationAddress.broadcast = value;
+        else if (key == "multicast") teamCommunicationAddress.multicast = value;
+        else if (key == "teamPort") teamCommunicationAddress.teamPort = std::stoi(value);
         else if (key == "unbeatablesNumber") unbeatablesReturnBoard.teamNum = std::stoi(value);
         else if (key == "playerNumber") unbeatablesReturnBoard.playerNum  = std::stoi(value);
         else if (key == "camera") systemSettings.camera = std::stoi(value);

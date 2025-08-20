@@ -22,7 +22,7 @@ void Communication::close() {
 
 void Communication::process() const {
     while (isRunning) {
-        gameControllerClient->sendUnicast(gameController->adapterReturnData(unbeatablesReturnBoard));
+        gameControllerClient->sendData(gameController->adapterReturnData(unbeatablesReturnBoard));
 
         std::vector<uint8_t> data = gameControllerServer->receiveData();
         if (data.size() >= sizeof(RoboCupGameControlData))

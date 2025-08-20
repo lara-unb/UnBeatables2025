@@ -9,4 +9,3 @@ public:
     virtual ~Server() {}
     virtual std::vector<uint8_t> receiveData() = 0;
 };
-
