@@ -1,32 +1,21 @@
 #pragma once
 
-#include <vector>
 #include "Server.hpp"
 #include <netinet/in.h>
-
-enum Mode2 {
-    BROADCAST = 0,
-    MULTICAST,
-    UNICAST
-};
+#include <arpa/inet.h>
 
 class UDPServer : public Server {
 private:
     sockaddr_in addr {};
     int sockfd = -1;
-
     std::string host;
     std::string port;
-
-    Mode2 mode = MULTICAST;
-
+    SocketMode mode;
 public:
-    UDPServer(int port, Mode2 mode, const std::string& host = "0.0.0.0");
+    UDPServer(const std::string& host, const int port, const SocketMode mode);
     ~UDPServer() override;
-
+    void activateUnicast() override;
+    void activateMulticast() override;
+    void activateBroadcast() override;
     std::vector<uint8_t> receiveData() override;
-
-    void setUnicast();
-    void setMulticast();
-    void setBroadcast();
 };

@@ -3,6 +3,12 @@
 #include <string>
 #include <qi/session.hpp>
 
+enum SocketMode {
+    BROADCAST = 0,
+    MULTICAST,
+    UNICAST
+};
+
 struct NAOqiAddress {
     std::string ip;
     int port;
