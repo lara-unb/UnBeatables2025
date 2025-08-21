@@ -25,7 +25,10 @@ void loadConfig() {
         else if (key == "multicast") teamCommunicationAddress.multicast = value;
         else if (key == "teamPort") teamCommunicationAddress.teamPort = std::stoi(value);
         else if (key == "unbeatablesNumber") unbeatablesReturnBoard.teamNum = std::stoi(value);
-        else if (key == "playerNumber") unbeatablesReturnBoard.playerNum  = std::stoi(value);
+        else if (key == "playerNumber") {
+            unbeatablesReturnBoard.playerNum  = std::stoi(value);
+            selfMessage.playerNumber = std::stoi(value);
+        }
         else if (key == "camera") systemSettings.camera = std::stoi(value);
         else if (key == "cascade") systemSettings.cascade = value;
         else if (key == "network") systemSettings.network = std::stoi(value);

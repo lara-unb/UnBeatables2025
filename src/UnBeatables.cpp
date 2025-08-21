@@ -3,6 +3,7 @@
 #include "UnBeatables.hpp"
 #include <ConnectionSettings.hpp>
 #include <UnBoard.hpp>
+#include <communication/teamController/TeamMessage.hpp>
 
 // GLOBAL CONNECTION VARIABLES
 NAOqiAddress naoqiAddress;
@@ -17,6 +18,10 @@ UnBeatablesReturnBoard unbeatablesReturnBoard;
 
 // GLOBAL STRATEGIES VARIABLES
 SystemSettings systemSettings;
+
+// GLOBAL TEAM MESSAGES VARIABLES
+TeamMessage selfMessage;
+TeamMessage teamMessages[MAX_ROBOTS];
 
 UnBeatables::UnBeatables() {
     LOG(INFO) << "\x1B[32m[MAIN] Initializing UnBeatables\x1B[0m";

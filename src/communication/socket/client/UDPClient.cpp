@@ -67,4 +67,5 @@ void UDPClient::sendData(const std::vector<uint8_t>& data) {
     if (sent < 0) {
         throw std::runtime_error("Failed to send UDP packet");
     }
+    LOG(INFO) << "\x1B[93m[UDPClient] Sending message to port: " << port <<"\x1B[0m";
 }

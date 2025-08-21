@@ -5,7 +5,6 @@
 
 using namespace std;
 
-#define UNBEATABLES_NUMBER      31
 #define ROBOT_STATUS_FALLEN     1
 #define ROBOT_STATUS_UPRIGHT    0
 
@@ -29,7 +28,7 @@ struct UnBeatablesReturnBoard {
     char header[4] = {'R', 'G', 'r', 't'};
     uint8_t version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
     uint8_t playerNum = 1;
-    uint8_t teamNum = UNBEATABLES_NUMBER;
+    uint8_t teamNum = -1;
     uint8_t fallen = ROBOT_STATUS_UPRIGHT;
     float pose[3] = {0.0f, 0.0f, 0.0f};
     float ballAge = 0;

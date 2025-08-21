@@ -6,6 +6,7 @@
 #include "perception/camera/V4L2Camera.hpp"
 #include "perception/detectors/BallDetector.hpp"
 #include "communication/gameController/GameController.hpp"
+#include "communication/teamController/TeamController.hpp"
 #include "communication/socket/client/TCPClient.hpp"
 #include "communication/socket/client/UDPClient.hpp"
 #include "communication/socket/server/TCPServer.hpp"
@@ -41,6 +42,9 @@ Communication* Builder::buildCommunication(){
     LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using GameController\x1B[0m";
     std::unique_ptr<GameController> gameController(new GameController());
 
+    LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using TeamController\x1B[0m";
+    std::unique_ptr<TeamController> teamController(new TeamController());
+
     std::unique_ptr<Client> gameControllerClient;
     std::unique_ptr<Server> gameControllerServer;
     std::unique_ptr<Client> teamClient;
@@ -59,14 +63,14 @@ Communication* Builder::buildCommunication(){
                 SocketMode::UNICAST));
 
             teamClient.reset(new UDPClient(
-                gameControllerAddress.host,
+                teamCommunicationAddress.multicast,
                 teamCommunicationAddress.teamPort,
-                SocketMode::BROADCAST));
+                SocketMode::UNICAST));
 
             teamServer.reset(new UDPServer(
                 teamCommunicationAddress.multicast,
                 teamCommunicationAddress.teamPort,
-                SocketMode::BROADCAST));
+                SocketMode::UNICAST));
             break;
 
         case TCP_NETWORK:
@@ -91,8 +95,15 @@ Communication* Builder::buildCommunication(){
                 teamCommunicationAddress.teamPort,
                 SocketMode::BROADCAST));
             break;
+
         default:
             throw std::runtime_error("Network strategy not found");
     }
-    return new Communication(gameController.release(), gameControllerClient.release(), gameControllerServer.release());
+    return new Communication(
+        gameController.release(),
+        gameControllerClient.release(),
+        gameControllerServer.release(),
+        teamController.release(),
+        teamClient.release(),
+        teamServer.release());
 }
