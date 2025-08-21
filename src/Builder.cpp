@@ -68,6 +68,7 @@ Communication* Builder::buildCommunication(){
                 teamCommunicationAddress.teamPort,
                 SocketMode::BROADCAST));
             break;
+
         case TCP_NETWORK:
             LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using TCP Socket\x1B[0m";
             gameControllerClient.reset(new TCPClient(
