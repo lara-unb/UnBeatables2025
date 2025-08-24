@@ -23,7 +23,7 @@ void initLoggingSystem() {
 int main() {
     std::signal(SIGINT, signalHandler);
     initLoggingSystem();
-    loadConfig(naoqiAddress, gameControllerAddress);
+    loadConfig();
     LOG(INFO) << "\x1B[32m[MAIN] Initializing Unboard\x1B[0m";
     try {
         unbeatables = new UnBeatables();

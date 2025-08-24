@@ -1,28 +1,29 @@
 #include "communication/Communication.hpp"
+#include "Logs/EasyLogging.h"
 
-#include "ConnectionConfig.hpp"
-#include "communication/socket/client/UDPClient.hpp"
-#include "communication/socket/server/UDPServer.hpp"
-
-Communication::Communication() {
-#ifdef USE_UDP
-    client = new UDPClient(gameControllerAddress.ip, gameControllerAddress.writingPort);
-    server = new UDPServer("0.0.0.0", gameControllerAddress.readingPort);
-#else
-    socket = new TCPSocket("", 1);
-#endif
+Communication::Communication(GameController* gamecontroller, TeamController* teamController)
+    : gameController(gamecontroller), teamController(teamController)
+{
     isRunning = true;
+    gameControllerIsConnected = gameController->verifyConnection();
+    teamControllerIsConnected = teamController->verifyConnection();
+
+    if (!gameControllerIsConnected) delete gameController;
+    if (!teamControllerIsConnected) delete teamController;
 }
 
 void Communication::close() {
+    LOG(INFO) << "\x1B[93m[COMMUNICATION] Closing controllers\x1B[0m";
     isRunning = false;
-    delete client;
-    delete server;
+    sleep(1);
+    if (gameControllerIsConnected) delete gameController;
+    if (teamControllerIsConnected) delete teamController;
 }
 
-void Communication::process() const {
-    // while (isRunning) {
-        client->sendData("teste");
-        server->receiveData();
-    // }
+void Communication::process() {
+    while (isRunning) {
+        sleep(FREQUENCY);
+        if (gameControllerIsConnected) gameController->process();
+        if (teamControllerIsConnected) teamController->process();
+    }
 }

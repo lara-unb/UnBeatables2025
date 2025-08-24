@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(exe CXX)
+project(UnBeatables CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -94,17 +94,14 @@ file(GLOB_RECURSE SRC_FILES
         Main.cpp
 )
 
-add_executable(exe ${SRC_FILES})
+add_executable(UnBeatables ${SRC_FILES})
 
 # -----------------------------------------------------------
 # Definições e propriedades
 # -----------------------------------------------------------
-target_compile_definitions(exe PRIVATE
-        USE_NAOQI
-        USE_UDP
-)
+target_compile_definitions(UnBeatables PRIVATE)
 
-set_target_properties(exe PROPERTIES
+set_target_properties(UnBeatables PROPERTIES
         LINK_FLAGS "-Wl,-rpath,${SDK_PATH}/lib"
 )
 
@@ -113,7 +110,7 @@ set_target_properties(exe PROPERTIES
 # -----------------------------------------------------------
 message(STATUS "${BANNER}")
 
-target_link_libraries(exe
+target_link_libraries(UnBeatables
         ${LINK_LIBS}
         ${OpenCV_LIBS}
         pthread

@@ -1,7 +1,7 @@
 #include <action/motion/Motion.h>
 #include <alcommon/alproxy.h>
 #include "Logs/EasyLogging.h"
-#include "ConnectionConfig.hpp"
+#include "ConnectionSettings.hpp"
 
 Motion::Motion()
     : motionService(boost::make_shared<AL::ALProxy>(session, "ALMotion")) {

@@ -1,9 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include <atomic>
+#include <communication/gameController/RoboCupGameControlData.h>
 
 using namespace std;
+
+#define ROBOT_STATUS_FALLEN     1
+#define ROBOT_STATUS_UPRIGHT    0
 
 struct BallPositionData {
     bool seen = false;
@@ -20,19 +23,18 @@ struct PerceptionBoard {
     BallPositionData topCamera;
     BallPositionData botCamera;
 };
-extern PerceptionBoard perceptionBoard;
 
-struct CommunicationBoard {
-    atomic<int8_t> gamePhase;
-    atomic<int8_t> gameState;
-    atomic<int8_t> setPlay;
-    atomic<int8_t> firstHalf;
-    atomic<int8_t> kickingTeam;
-    atomic<uint8_t> playerNumber;
-    atomic<uint8_t> penalty;
-    atomic<uint8_t> teamNumber;
-    atomic<int16_t> secsRemaining;
-    atomic<int16_t> score;
-    atomic<int16_t> secsTillUnpenalised;
+struct UnBeatablesReturnBoard {
+    char header[4] = {'R', 'G', 'r', 't'};
+    uint8_t version = GAMECONTROLLER_RETURN_STRUCT_VERSION;
+    uint8_t playerNum = 1;
+    uint8_t teamNum = -1;
+    uint8_t fallen = ROBOT_STATUS_UPRIGHT;
+    float pose[3] = {0.0f, 0.0f, 0.0f};
+    float ballAge = 0;
+    float ball[2] = { 0.0f, 0.0f };
 };
-extern CommunicationBoard communicationBoard;
+
+extern PerceptionBoard perceptionBoard;
+extern RoboCupGameControlData roboCupControlBoard;
+extern UnBeatablesReturnBoard unbeatablesReturnBoard;

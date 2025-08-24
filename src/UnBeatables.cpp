@@ -1,26 +1,42 @@
 #include <Logs/EasyLogging.h>
-
 #include <thread>
 #include "UnBeatables.hpp"
-#include <ConnectionConfig.hpp>
+#include <ConnectionSettings.hpp>
 #include <UnBoard.hpp>
+#include <communication/teamController/TeamMessage.hpp>
 
+// GLOBAL CONNECTION VARIABLES
 NAOqiAddress naoqiAddress;
 GameControllerAddress gameControllerAddress;
+TeamCommunicationAddress teamCommunicationAddress;
 qi::SessionPtr session;
 
+// GLOBAL BLACKBOARD VARIABLES
 PerceptionBoard perceptionBoard;
-CommunicationBoard communicationBoard;
+RoboCupGameControlData roboCupControlBoard;
+UnBeatablesReturnBoard unbeatablesReturnBoard;
+
+// GLOBAL STRATEGIES VARIABLES
+SystemSettings systemSettings;
+
+// GLOBAL TEAM MESSAGES VARIABLES
+TeamMessage selfMessage;
+TeamMessage teamMessages[MAX_ROBOTS];
 
 UnBeatables::UnBeatables() {
     LOG(INFO) << "\x1B[32m[MAIN] Initializing UnBeatables\x1B[0m";
     initSession();
-    perception = new Perception();
-    behavior = new Behavior();
-    communication = new Communication();
+    builder = new Builder;
+    communication = builder->buildCommunication();
+    perception = builder->buildPerception();
+    behavior = builder->buildBehavior();
 }
 
 void UnBeatables::close() const {
+    if (communication) {
+        LOG(INFO) << "\x1B[32m[MAIN] Closing communication\x1B[0m";
+        communication->close();
+    }
     if (perception) {
         LOG(INFO) << "\x1B[32m[MAIN] Closing perception\x1B[0m";
         perception->close();
@@ -28,10 +44,6 @@ void UnBeatables::close() const {
     if (behavior) {
         LOG(INFO) << "\x1B[32m[MAIN] Closing behavior\x1B[0m";
         behavior->close();
-    }
-    if (communication) {
-        LOG(INFO) << "\x1B[32m[MAIN] Closing communication\x1B[0m";
-        communication->close();
     }
     if (session) {
         LOG(INFO) << "\x1B[32m[MAIN] Closing session\x1B[0m";

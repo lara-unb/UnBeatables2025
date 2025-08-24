@@ -1,18 +1,21 @@
 #pragma once
 
+#include "gameController/GameController.hpp"
+#include "teamController/TeamController.hpp"
 #include <atomic>
-#include "socket/server/Server.hpp"
-#include  "socket/client/Client.hpp"
+
+#define FREQUENCY      1
 
 class Communication {
 private:
-    Client *client;
-    Server *server;
+    GameController* gameController;
+    TeamController* teamController;
+    std::atomic<bool> gameControllerIsConnected{};
+    std::atomic<bool> teamControllerIsConnected{};
     std::atomic<bool> isRunning{};
 public:
-    Communication();
-
-    void process() const;
+    Communication(GameController* gamecontroller, TeamController* teamController);
+    void process();
     void close();
 };
 
