@@ -1,16 +1,24 @@
 #pragma once
 
-#include <cstdint>
-#include <vector>
 #include "RoboCupGameControlData.h"
 #include "UnBoard.hpp"
+#include "communication/socket/UDPClient.hpp"
+#include "communication/socket/UDPServer.hpp"
+#include <cstdint>
+#include <vector>
+#include <future>
 
 class GameController {
 private:
-	RoboCupGameControlData roboCupData{};
-	RoboCupGameControlReturnData roboCupReturnData{};
+	RoboCupGameControlData incomingData{};
+	RoboCupGameControlReturnData outgoingData{};
+	UDPClient* client;
+	UDPServer* server;
 public:
-    GameController();
-	RoboCupGameControlData convertToRoboCupGameData(std::vector<uint8_t> data);
-	std::vector<uint8_t> convertToVector(const UnBeatablesReturnBoard& data);
+    GameController(UDPClient* client, UDPServer* server);
+	~GameController();
+	RoboCupGameControlData convertToRoboCupGameData(const std::vector<uint8_t> data);
+	std::vector<uint8_t> convertToVector(const RoboCupGameControlReturnData& data);
+	bool verifyConnection();
+	void process();
 };

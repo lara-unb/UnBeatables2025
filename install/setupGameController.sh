@@ -20,4 +20,4 @@ fi
 
 # USAMOS ISSO PRA VER EM QUE PORTAS ESTAMOS TRABALHANDO
 # sudo lsof -i -n -P | grep game_cont
-# sudo lsof -i -n -P | grep exe
+# sudo lsof -i -n -P | grep UnBeatabl

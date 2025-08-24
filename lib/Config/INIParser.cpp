@@ -31,6 +31,5 @@ void loadConfig() {
         }
         else if (key == "camera") systemSettings.camera = std::stoi(value);
         else if (key == "cascade") systemSettings.cascade = value;
-        else if (key == "network") systemSettings.network = std::stoi(value);
     }
 }

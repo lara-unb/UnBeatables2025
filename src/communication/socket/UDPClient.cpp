@@ -1,4 +1,4 @@
-#include "communication/socket/client/UDPClient.hpp"
+#include "communication/socket/UDPClient.hpp"
 #include "Logs/EasyLogging.h"
 
 UDPClient::UDPClient(const std::string& host, const int port, const SocketMode mode)
@@ -41,10 +41,31 @@ void UDPClient::activateUnicast() {
 }
 
 void UDPClient::activateMulticast() {
-    LOG(INFO) << "\x1B[93m[UDPClient] Using MULTICAST (" << host << ":" << port <<")\x1B[0m";
+    LOG(INFO) << "\x1B[93m[UDPClient] Using MULTICAST (" << host << ":" << port << ")\x1B[0m";
     mode = MULTICAST;
+
     if (inet_pton(AF_INET, host.c_str(), &addr.sin_addr) <= 0) {
-        throw std::runtime_error("Invalid multicast address");
+        throw std::runtime_error("Invalid multicast address: " + host);
+    }
+
+    // Interface de saída (0.0.0.0 = qualquer disponível)
+    in_addr localInterface{};
+    localInterface.s_addr = htonl(INADDR_ANY);
+    if (setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_IF,
+                   (char*)&localInterface, sizeof(localInterface)) < 0) {
+        throw std::runtime_error("Failed to set multicast interface");
+                   }
+
+    // TTL = 1 (somente LAN)
+    unsigned char ttl = 1;
+    if (setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(ttl)) < 0) {
+        throw std::runtime_error("Failed to set multicast TTL");
+    }
+
+    // Ativa loopback (para testes)
+    unsigned char loop = 1;
+    if (setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop)) < 0) {
+        throw std::runtime_error("Failed to enable multicast loopback");
     }
 }
 
@@ -63,9 +84,12 @@ void UDPClient::activateBroadcast() {
 }
 
 void UDPClient::sendData(const std::vector<uint8_t>& data) {
-    ssize_t sent = sendto(sockfd, data.data(), data.size(), 0, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+    ssize_t sent = sendto(sockfd, data.data(), data.size(),
+                          MSG_DONTWAIT,
+                          reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
     if (sent < 0) {
         throw std::runtime_error("Failed to send UDP packet");
     }
-    LOG(INFO) << "\x1B[93m[UDPClient] Sending message to port: " << port <<"\x1B[0m";
+
+    LOG(INFO) << "\x1B[93m[UDPClient] Sending message to host (" << host << ":" << port <<")\x1B[0m";
 }

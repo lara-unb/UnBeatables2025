@@ -8,12 +8,8 @@
 #define NAOQI_CAMERA 		1
 #define V4L2_CAMERA			2
 
-#define UDP_NETWORK 		1
-#define TCP_NETWORK 		2
-
 struct SystemSettings {
 	int camera;
-	int network;
 	std::string cascade;
 };
 extern SystemSettings systemSettings;

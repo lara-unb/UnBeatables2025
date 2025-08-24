@@ -1,11 +1,14 @@
 #pragma once
 
-#include "Client.hpp"
+#include <ConnectionSettings.hpp>
+#include <cstdint>
+#include <vector>
+#include <string>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 
-class UDPClient : public Client {
+class UDPClient{
 private:
     sockaddr_in addr {};
     int sockfd = -1;
@@ -14,9 +17,9 @@ private:
     SocketMode mode;
 public:
     UDPClient(const std::string& host, const int port, const SocketMode mode);
-    ~UDPClient() override;
-    void activateUnicast() override;
-    void activateMulticast() override;
-    void activateBroadcast() override;
-    void sendData(const std::vector<uint8_t>& data) override;
+    ~UDPClient();
+    void activateUnicast();
+    void activateMulticast();
+    void activateBroadcast();
+    void sendData(const std::vector<uint8_t>& data);
 };

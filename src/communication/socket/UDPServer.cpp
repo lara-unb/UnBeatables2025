@@ -1,4 +1,4 @@
-#include "communication/socket/server/UDPServer.hpp"
+#include "communication/socket/UDPServer.hpp"
 #include "Logs/EasyLogging.h"
 
 UDPServer::UDPServer(const std::string& host, const int port, const SocketMode mode)
@@ -17,11 +17,11 @@ UDPServer::UDPServer(const std::string& host, const int port, const SocketMode m
         case UNICAST:
             UDPServer::activateUnicast();
             break;
-        case BROADCAST:
-            UDPServer::activateBroadcast();
-            break;
         case MULTICAST:
             UDPServer::activateMulticast();
+            break;
+        case BROADCAST:
+            UDPServer::activateBroadcast();
             break;
         default:
             throw std::runtime_error("Invalid UDP server mode");
@@ -47,7 +47,7 @@ void UDPServer::activateUnicast() {
 }
 
 void UDPServer::activateMulticast() {
-    LOG(INFO) << "\x1B[93m[UDPServer] Using MULTICAST on port: " << port << "\x1B[0m";
+    LOG(INFO) << "\x1B[93m[UDPServer] Using MULTICAST on host (" << host << ":" << port << ")\x1B[0m";
     mode = MULTICAST;
     addr.sin_addr.s_addr = INADDR_ANY;
     if (bind(sockfd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) < 0) {
@@ -58,8 +58,9 @@ void UDPServer::activateMulticast() {
         throw std::runtime_error("Invalid multicast address: " + host);
     }
     mreq.imr_interface.s_addr = htonl(INADDR_ANY);
-    if (setsockopt(sockfd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) < 0) {
-        throw std::runtime_error("Failed to join multicast group");
+    int reuse = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0) {
+        throw std::runtime_error("setsockopt(SO_REUSEADDR) failed");
     }
 }
 
@@ -74,6 +75,12 @@ void UDPServer::activateBroadcast() {
 }
 
 std::vector<uint8_t> UDPServer::receiveData() {
+
+    struct timeval tv{};
+    tv.tv_sec = 2;
+    tv.tv_usec = 0;
+    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+
     char buffer[1024];
     struct sockaddr_in clientAddr{};
     socklen_t clientLen = sizeof(clientAddr);
@@ -86,7 +93,7 @@ std::vector<uint8_t> UDPServer::receiveData() {
         &clientLen
     );
     if (recvLen < 0) {
-        LOG(INFO) << "Error receiving UDP data";
+        LOG(INFO) << "\x1B[93m[UDPServer] Error receiving UDP data\x1B[0m";
         return {};
     }
     if (mode == UNICAST) {

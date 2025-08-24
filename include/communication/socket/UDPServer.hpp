@@ -1,10 +1,13 @@
 #pragma once
 
-#include "Server.hpp"
+#include "ConnectionSettings.hpp"
+#include <cstdint>
+#include <vector>
+#include <string>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-class UDPServer : public Server {
+class UDPServer {
 private:
     sockaddr_in addr {};
     int sockfd = -1;
@@ -13,9 +16,9 @@ private:
     SocketMode mode;
 public:
     UDPServer(const std::string& host, const int port, const SocketMode mode);
-    ~UDPServer() override;
-    void activateUnicast() override;
-    void activateMulticast() override;
-    void activateBroadcast() override;
-    std::vector<uint8_t> receiveData() override;
+    ~UDPServer();
+    void activateUnicast();
+    void activateMulticast();
+    void activateBroadcast();
+    std::vector<uint8_t> receiveData();
 };

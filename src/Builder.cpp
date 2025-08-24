@@ -7,10 +7,8 @@
 #include "perception/detectors/BallDetector.hpp"
 #include "communication/gameController/GameController.hpp"
 #include "communication/teamController/TeamController.hpp"
-#include "communication/socket/client/TCPClient.hpp"
-#include "communication/socket/client/UDPClient.hpp"
-#include "communication/socket/server/TCPServer.hpp"
-#include "communication/socket/server/UDPServer.hpp"
+#include "communication/socket/UDPClient.hpp"
+#include "communication/socket/UDPServer.hpp"
 
 Behavior* Builder::buildBehavior() {
     return new Behavior();
@@ -39,71 +37,33 @@ Perception* Builder::buildPerception() {
 
 
 Communication* Builder::buildCommunication(){
+
+    LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using UDP Socket\x1B[0m";
+    std::unique_ptr<UDPClient> gameControllerClient(new UDPClient(
+        gameControllerAddress.host,
+        gameControllerAddress.writingPort,
+        SocketMode::UNICAST));
+
+    std::unique_ptr<UDPServer> gameControllerServer(new UDPServer(
+        gameControllerAddress.host,
+        gameControllerAddress.readingPort,
+        SocketMode::UNICAST));
+
+    std::unique_ptr<UDPClient> teamClient(new UDPClient(
+        teamCommunicationAddress.multicast,
+        teamCommunicationAddress.teamPort,
+        SocketMode::UNICAST));
+
+    std::unique_ptr<UDPServer> teamServer(new UDPServer(
+        teamCommunicationAddress.multicast,
+        teamCommunicationAddress.teamPort,
+        SocketMode::UNICAST));
+
     LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using GameController\x1B[0m";
-    std::unique_ptr<GameController> gameController(new GameController());
+    std::unique_ptr<GameController> gameController(new GameController(gameControllerClient.release(), gameControllerServer.release()));
 
     LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using TeamController\x1B[0m";
-    std::unique_ptr<TeamController> teamController(new TeamController());
+    std::unique_ptr<TeamController> teamController(new TeamController(teamClient.release(), teamServer.release()));
 
-    std::unique_ptr<Client> gameControllerClient;
-    std::unique_ptr<Server> gameControllerServer;
-    std::unique_ptr<Client> teamClient;
-    std::unique_ptr<Server> teamServer;
-    switch (systemSettings.network) {
-        case UDP_NETWORK:
-            LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using UDP Socket\x1B[0m";
-            gameControllerClient.reset(new UDPClient(
-                gameControllerAddress.host,
-                gameControllerAddress.writingPort,
-                SocketMode::UNICAST));
-
-            gameControllerServer.reset(new UDPServer(
-                gameControllerAddress.host,
-                gameControllerAddress.readingPort,
-                SocketMode::UNICAST));
-
-            teamClient.reset(new UDPClient(
-                teamCommunicationAddress.multicast,
-                teamCommunicationAddress.teamPort,
-                SocketMode::UNICAST));
-
-            teamServer.reset(new UDPServer(
-                teamCommunicationAddress.multicast,
-                teamCommunicationAddress.teamPort,
-                SocketMode::UNICAST));
-            break;
-
-        case TCP_NETWORK:
-            LOG(INFO) << "\x1B[32m[BUILDER] Communication - Using TCP Socket\x1B[0m";
-            gameControllerClient.reset(new TCPClient(
-                gameControllerAddress.host,
-                gameControllerAddress.writingPort,
-                SocketMode::UNICAST));
-
-            gameControllerServer.reset(new TCPServer(
-                gameControllerAddress.host,
-                gameControllerAddress.readingPort,
-                SocketMode::UNICAST));
-
-            teamClient.reset(new TCPClient(
-                gameControllerAddress.host,
-                teamCommunicationAddress.teamPort,
-                SocketMode::BROADCAST));
-
-            teamServer.reset(new TCPServer(
-                teamCommunicationAddress.multicast,
-                teamCommunicationAddress.teamPort,
-                SocketMode::BROADCAST));
-            break;
-
-        default:
-            throw std::runtime_error("Network strategy not found");
-    }
-    return new Communication(
-        gameController.release(),
-        gameControllerClient.release(),
-        gameControllerServer.release(),
-        teamController.release(),
-        teamClient.release(),
-        teamServer.release());
+    return new Communication(gameController.release(), teamController.release());
 }

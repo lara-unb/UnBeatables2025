@@ -52,11 +52,11 @@ void UnBeatables::close() const {
 }
 
 void UnBeatables::process() const{
-    // std::thread t1([this] { perception->process(); });
+    std::thread t1([this] { perception->process(); });
     std::thread t2([this] { behavior->process(); });
     std::thread t3([this] { communication->process(); });
 
-    // t1.join();
+    t1.join();
     t2.join();
     t3.join();
 }
