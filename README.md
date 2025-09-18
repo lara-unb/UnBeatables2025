@@ -4,10 +4,11 @@
 
 Este repositório contém o código de competição desenvolvido com muito carinho. Gostaria de convidar você a deixar sua marca nessa importante jornada. Por favor, se você contribuiu para o código e time, coloque seu nome aqui:
 
-| Integrantes |
-|-------------|
-| Jão (i-JSS) |
-|             |
+|  Integrantes  |
+| ------------- |
+|  Jão (i-JSS)  |
+|  Davi (Withy) |
+|               |
 
 ## 🔧 Instalação
 
