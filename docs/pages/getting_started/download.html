@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnBeatables Docs</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1vw;
+            padding: 1vw;
+        }
+
+        .botao {
+            flex: 1;
+            max-width: 300px;
+            padding: 1vw;
+            border-radius: 1vw;
+            background-color: #143E78;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .botao:hover {
+            background-color: #0F2C5A;
+        }
+
+        .botaoblock {
+            flex: 1;
+            max-width: 300px;
+            padding: 1vw;
+            border-radius: 1vw;
+            background-color: #6e6e6e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <center>
+        <h1>
+            <a class="anchor"><span>Download Ambiente</span></a>
+        </h1>
+    </center>
+
+    <hr>
+
+    <label>Os programas necessários para o projeto serão instalados na pasta <strong>UnBeatables</strong>, localizada no diretório inicial do usuário (<code>~/</code> ou "Início").</label>
+
+    <ul>
+        <li><strong>Choregraphe</strong> - Versão 2.8.8 para Ubuntu 22.04</li>
+        <li><strong>Penv</strong> - Versão 2.7 (Ambiente virtual UnBeatables)</li>
+        <li><strong>CoppeliaSim</strong></li>
+        <li><strong>NAOqi Python</strong></li>
+        <li><strong>NAOqi C++</strong></li>
+    </ul>
+
+    <hr>
+
+    <p>
+        <strong>Para executar:</strong> digite o seguinte comando no terminal, substituindo o número da versão conforme necessário:
+    </p>
+
+    <div style="margin-top: 1.5em; padding: 1em; background-color: #f9f9f9; border-left: 4px solid #0F2C5A; font-family: sans-serif; font-size: 0.95em; line-height: 1.6;">
+        <code>chmod +x ./instaladorUbuntu24.sh && sudo ./instaladorUbuntu24.sh</code>
+    </div>
+
+    <p>
+        <strong>Nota:</strong> o comando <code style="background-color: #eee; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;">chmod</code> garante que o arquivo bash tenha permissão de execução. <br>
+        É comum que o sistema solicite sua senha, pois o instalador utiliza comandos com <code style="background-color: #eee; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;">sudo</code> para instalar dependências.
+    </p>
+
+    <hr>
+
+    <div class="container">
+        <button class="botao" id="du24" >Ubuntu 24.04</button>
+        <button class="botao" id="du22" >Ubuntu 22.04</button>
+        <button class="botao" id="du20" >Ubuntu 20.04</button>
+    </div>
+
+    <hr>
+
+    <h2 style="text-align: center;">Histórico de versão</h2>
+
+    <div style="margin: 0 auto; width: fit-content;">
+        <table style="border-collapse: collapse; text-align: center; margin: 0 auto;">
+            <thead>
+            <tr>
+                <th style="border: 1px solid #ccc; padding: 8px;">Data</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">Versão</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">Descrição</th>
+                <th style="border: 1px solid #ccc; padding: 8px;">Autores</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">08/04/2025</td>
+                <td style="border: 1px solid #ccc; padding: 8px;"><code style="background-color: #eee; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;">1.0</code> </td>
+                <td style="border: 1px solid #ccc; padding: 8px;">Criação do instalador para Ubuntu 24, 22 e 20.</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">
+                    <a href="https://github.com/i-JSS" target="_blank">João Carvalho</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        function install(version) {
+            const link = document.createElement("a");
+            link.href = `src/instaladorUbuntu${version}.sh`;
+            link.download = `instaladorUbuntu${version}.sh`;
+            link.click();
+        }
+
+        document.getElementById("du24").addEventListener("click", () => install("24"));
+        document.getElementById("du22").addEventListener("click", () => install("22"));
+        document.getElementById("du20").addEventListener("click", () => install("20"));
+    </script>
+
+</body>
+</html>
