@@ -1,4 +1,4 @@
-<a href="https://lara-unb.github.io/unbeatables/#/">
+<a href="https://lara-unb.github.io/UnBeatables/#/">
 
   <img src="assets/banner.jpeg" alt="UnBeatables">
 </a>
