@@ -20,12 +20,7 @@ class UnBeatables:
         self.ip = ip
         self.port = port
         self.session = qi.Session()
-        try:
-            self.session.connect("tcp://{0}:{1}".format(self.ip, self.port))
-            logs.logger_main.info("Connected to NAOqi at {0}:{1}".format(self.ip, self.port))
-        except RuntimeError:
-            logs.logger_main.exception("Could not connect to NAOqi at {0}:{1}".format(self.ip, self.port))
-            sys.exit(1)
+        self.connect()
 
         self.motion = Motion(self.session)
         self.behavior = Behavior(self.session)
@@ -36,6 +31,14 @@ class UnBeatables:
         self.perception_thread = None
         self.communication_thread = None
 
+    def connect(self):
+        try:
+            self.session.connect("tcp://{0}:{1}".format(self.ip, self.port))
+            logs.logger_main.info("Connected to NAOqi at {0}:{1}".format(self.ip, self.port))
+        except RuntimeError:
+            logs.logger_main.exception("Could not connect to NAOqi at {0}:{1}".format(self.ip, self.port))
+            sys.exit(1)
+
     def start_threads(self):
         logs.logger_main.info("Starting threads...")
         self.behavior_thread = threading.Thread(target=self.behavior.run)
@@ -45,14 +48,6 @@ class UnBeatables:
         self.behavior_thread.start()
         self.perception_thread.start()
         self.communication_thread.start()
-
-    def join_threads(self):
-        if self.behavior_thread:
-            self.behavior_thread.join()
-        if self.perception_thread:
-            self.perception_thread.join()
-        if self.communication_thread:
-            self.communication_thread.join()
 
     def shutdown(self, *_):
         logs.logger_main.info("Ctrl+C detected, shutting down modules...")
@@ -67,13 +62,11 @@ class UnBeatables:
         logs.logger_main.info("All modules closed. Exiting program.")
         sys.exit(0)
 
-
 if __name__ == "__main__":
     loader = ConfigLoader("config.ini")
     loader.apply()
 
-    nao = UnBeatables(ip=UnBoard.naoqiAddress_ip,
-                      port=UnBoard.naoqiAddress_port)
+    nao = UnBeatables(ip=UnBoard.naoqiAddress_ip, port=UnBoard.naoqiAddress_port)
     signal.signal(signal.SIGINT, nao.shutdown)
     nao.start_threads()
     signal.pause()
