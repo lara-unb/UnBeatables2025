@@ -45,6 +45,10 @@ class UnBeatables:
         self.perception_thread = threading.Thread(target=self.perception.run)
         self.communication_thread = threading.Thread(target=self.communication.run)
 
+        self.behavior_thread.daemon = True
+        self.perception_thread.daemon = True
+        self.communication_thread.daemon = True
+
         self.behavior_thread.start()
         self.perception_thread.start()
         self.communication_thread.start()
