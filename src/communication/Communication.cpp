@@ -7,7 +7,7 @@ Communication::Communication(GameController* gamecontroller, TeamController* tea
     isRunning = true;
     gameControllerIsConnected = gameController->verifyConnection();
     teamControllerIsConnected = teamController->verifyConnection();
-
+    teamControllerIsConnected = false;
     if (!gameControllerIsConnected) delete gameController;
     if (!teamControllerIsConnected) delete teamController;
 }
@@ -21,6 +21,7 @@ void Communication::close() {
 }
 
 void Communication::process() {
+    if (!gameControllerIsConnected && !teamControllerIsConnected) return;
     while (isRunning) {
         sleep(FREQUENCY);
         if (gameControllerIsConnected) gameController->process();

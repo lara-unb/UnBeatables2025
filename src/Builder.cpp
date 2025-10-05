@@ -9,6 +9,8 @@
 #include "communication/teamController/TeamController.hpp"
 #include "communication/socket/UDPClient.hpp"
 #include "communication/socket/UDPServer.hpp"
+#include "control/ControlsManager.hpp"
+#include "control/controls/PS2Control.hpp"
 
 Behavior* Builder::buildBehavior() {
     return new Behavior();
@@ -66,4 +68,10 @@ Communication* Builder::buildCommunication(){
     std::unique_ptr<TeamController> teamController(new TeamController(teamClient.release(), teamServer.release()));
 
     return new Communication(gameController.release(), teamController.release());
+}
+
+ControlsManager* Builder::buildControlManager(){
+    LOG(INFO) << "\x1B[32m[BUILDER] Control - Using PS2 controller\x1B[0m";
+    std::unique_ptr<PS2Control> ps2Control(new PS2Control("/dev/input/js0"));
+    return new ControlsManager(ps2Control.release());
 }
