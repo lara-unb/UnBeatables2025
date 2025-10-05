@@ -72,6 +72,6 @@ Communication* Builder::buildCommunication(){
 
 ControlsManager* Builder::buildControlManager(){
     LOG(INFO) << "\x1B[32m[BUILDER] Control - Using PS2 controller\x1B[0m";
-    std::unique_ptr<PS2Control> ps2Control(new PS2Control("/dev/input/js0"));
+    std::unique_ptr<PS2Control> ps2Control(new PS2Control(controlState.device));
     return new ControlsManager(ps2Control.release());
 }

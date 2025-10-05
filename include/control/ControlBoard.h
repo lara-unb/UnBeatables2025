@@ -1,8 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 struct ControlState {
+    std::string device;
+
     bool select = false;
     bool start = false;
     bool up = false;
