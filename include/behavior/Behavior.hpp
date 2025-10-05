@@ -16,11 +16,11 @@ private:
     uint8_t setPlay = -1;
 
     void gameControllerBehavior();
-    void controlCompetitionPhase();
-    void controlCompetitionType();
-    void controlGamePhase();
-    void controlState();
-    void controlSetPlay();
+    void controlerCompetitionPhase();
+    void controlerCompetitionType();
+    void controlerGamePhase();
+    void controlerState();
+    void controlerSetPlay();
 public:
     Behavior();
     void close();

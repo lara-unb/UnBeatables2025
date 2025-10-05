@@ -12,4 +12,12 @@ public:
 
     void wakeUp();
     void rest();
+
+    void move(float x, float y);
+    void rotate(bool side);
+    void moveHead(float x, float y);
+
+    void stopMove();
+    void stopRotate();
+    void stopMoveHead();
 };

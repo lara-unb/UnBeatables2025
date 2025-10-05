@@ -74,19 +74,5 @@ void PS2Control::update() {
             }
         }
     }
-}
-
-void PS2Control::printState() const {
-    LOG(INFO) << "\x1B[33m[PS2CONTROLLER] "
-              << "LX=" << state.leftStickX
-              << " LY=" << state.leftStickY
-              << " RX=" << state.rightStickX
-              << " RY=" << state.rightStickY
-              << " | X=" << state.cross
-              << " O=" << state.circle
-              << " △=" << state.triangle
-              << " ☐=" << state.square
-              << " | START=" << state.start
-              << " SELECT=" << state.select
-              << "\x1B[0m";
+    controlState = state;
 }

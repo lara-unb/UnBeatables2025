@@ -38,8 +38,6 @@ public:
     void open() override;
     void close() override;
     void update() override;
-
-    void printState() const;
 private:
     int fd{};
     std::string device = "/dev/input/js0";

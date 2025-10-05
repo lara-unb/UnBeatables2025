@@ -3,6 +3,11 @@
 #include <unistd.h>
 #include "UnBoard.hpp"
 #include "Logs/EasyLogging.h"
+#include <control/ControlBoard.h>
+
+#include <chrono>
+#include <thread>
+#include <cmath>
 
 Behavior::Behavior() {
     speak = new Speak();
@@ -19,12 +24,76 @@ void Behavior::close() {
 void Behavior::process(){
     motion->wakeUp();
     speak->say("Ola UnBeatables");
+    const int ENTER_THRESHOLD = 9000;
+    const int EXIT_THRESHOLD  = 7000;
+    const float SMOOTH_ALPHA  = 0.20f;
+    const std::chrono::milliseconds LOOP_MS(20);
+
+    bool moving = false;
+    bool rotating = false;
+    bool headMoving = false;
+    float smoothLX = 0.0f, smoothLY = 0.0f;
+    float smoothRX = 0.0f, smoothRY = 0.0f;
+
     while (isRunning) {
-        Behavior::gameControllerBehavior();
+        int16_t lx = controlState.leftStickX;
+        int16_t ly = controlState.leftStickY;
+        int16_t rx = controlState.rightStickX;
+        int16_t ry = controlState.rightStickY;
+        bool r1 = controlState.r1;
+        bool l1 = controlState.l1;
+
+        if (std::abs((int)rx) > ENTER_THRESHOLD || std::abs((int)ry) > ENTER_THRESHOLD) {
+            float nx = rx / 32767.0f;
+            float ny = ry / 32767.0f;
+            smoothRX = SMOOTH_ALPHA * nx + (1.0f - SMOOTH_ALPHA) * smoothRX;
+            smoothRY = SMOOTH_ALPHA * ny + (1.0f - SMOOTH_ALPHA) * smoothRY;
+
+            motion->moveHead(smoothRX, smoothRY);
+            headMoving = true;
+        } else if (headMoving) {
+            motion->stopMoveHead();
+            headMoving = false;
+        }
+
+        int abs_lx = std::abs((int)lx);
+        int abs_ly = std::abs((int)ly);
+
+        if (abs_lx > ENTER_THRESHOLD || abs_ly > ENTER_THRESHOLD) {
+            moving = true;
+        } else if (abs_lx < EXIT_THRESHOLD && abs_ly < EXIT_THRESHOLD) {
+            moving = false;
+        }
+
+        float normLX = lx / 32767.0f;
+        float normLY = ly / 32767.0f;
+        smoothLX = SMOOTH_ALPHA * normLX + (1.0f - SMOOTH_ALPHA) * smoothLX;
+        smoothLY = SMOOTH_ALPHA * normLY + (1.0f - SMOOTH_ALPHA) * smoothLY;
+
+        if (moving) {
+            LOG(INFO) << "[MOVE] raw(" << lx << "," << ly << ") norm(" << normLX << "," << normLY
+                      << ") smooth(" << smoothLX << "," << smoothLY << ")";
+            motion->move(smoothLX, smoothLY);
+        } else {
+            motion->stopMove();
+        }
+
+        if (r1 && !l1) {
+            motion->rotate(true);
+            rotating = true;
+        } else if (l1 && !r1) {
+            motion->rotate(false);
+            rotating = true;
+        } else if (rotating) {
+            motion->stopRotate();
+            rotating = false;
+        }
+
+        std::this_thread::sleep_for(LOOP_MS);
     }
 }
 
-void Behavior::controlCompetitionPhase() {
+void Behavior::controlerCompetitionPhase() {
     if (roboCupControlBoard.competitionPhase == competitionPhase) return;
     competitionPhase = roboCupControlBoard.competitionPhase;
 
@@ -41,7 +110,7 @@ void Behavior::controlCompetitionPhase() {
     }
 }
 
-void Behavior::controlCompetitionType() {
+void Behavior::controlerCompetitionType() {
     if (roboCupControlBoard.competitionType == competitionType) return;
     competitionType = roboCupControlBoard.competitionType;
 
@@ -58,7 +127,7 @@ void Behavior::controlCompetitionType() {
     }
 }
 
-void Behavior::controlGamePhase() {
+void Behavior::controlerGamePhase() {
     if (roboCupControlBoard.gamePhase == gamePhase) return;
     gamePhase = roboCupControlBoard.gamePhase;
 
@@ -81,7 +150,7 @@ void Behavior::controlGamePhase() {
     }
 }
 
-void Behavior::controlState() {
+void Behavior::controlerState() {
     if (roboCupControlBoard.state == state) return;
     state = roboCupControlBoard.state;
 
@@ -110,7 +179,7 @@ void Behavior::controlState() {
     }
 }
 
-void Behavior::controlSetPlay() {
+void Behavior::controlerSetPlay() {
     if (roboCupControlBoard.setPlay == setPlay) return;
     setPlay = roboCupControlBoard.setPlay;
 
@@ -140,9 +209,9 @@ void Behavior::controlSetPlay() {
 }
 
 void Behavior::gameControllerBehavior() {
-    controlCompetitionPhase();
-    controlCompetitionType();
-    controlGamePhase();
-    controlState();
-    controlSetPlay();
+    controlerCompetitionPhase();
+    controlerCompetitionType();
+    controlerGamePhase();
+    controlerState();
+    controlerSetPlay();
 }
