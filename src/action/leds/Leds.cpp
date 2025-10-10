@@ -6,7 +6,7 @@
 Leds::Leds()
     : leds(boost::make_shared<AL::ALProxy>(session, "ALLeds"))
 {
-    LOG(INFO) << "\x1B[37m[LEDS] Inicializado com sucesso\x1B[0m";
+    LOG(INFO) << "\x1B[37m[LEDS] Started successfully\x1B[0m";
 }
 
 void Leds::fadeRGB(const std::string& name, const std::string& color) {

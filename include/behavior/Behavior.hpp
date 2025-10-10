@@ -23,6 +23,6 @@ private:
     void controlerSetPlay();
 public:
     Behavior();
-    void close();
     void process();
+    void close();
 };

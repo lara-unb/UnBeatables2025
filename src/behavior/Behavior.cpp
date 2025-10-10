@@ -9,6 +9,8 @@
 #include <thread>
 #include <cmath>
 
+#include "action/kick/Kick.h"
+
 Behavior::Behavior() {
     speak = new Speak();
     motion = new Motion();
@@ -24,16 +26,20 @@ void Behavior::close() {
 void Behavior::process(){
     motion->wakeUp();
     speak->say("Ola UnBeatables");
+
     const int ENTER_THRESHOLD = 9000;
     const int EXIT_THRESHOLD  = 7000;
     const float SMOOTH_ALPHA  = 0.20f;
     const std::chrono::milliseconds LOOP_MS(20);
+    const std::chrono::milliseconds chute(12000);
 
     bool moving = false;
     bool rotating = false;
     bool headMoving = false;
     float smoothLX = 0.0f, smoothLY = 0.0f;
     float smoothRX = 0.0f, smoothRY = 0.0f;
+
+    Kick kc;
 
     while (isRunning) {
         int16_t lx = controlState.leftStickX;
@@ -67,13 +73,13 @@ void Behavior::process(){
 
         float normLX = lx / 32767.0f;
         float normLY = ly / 32767.0f;
-        smoothLX = SMOOTH_ALPHA * normLX + (1.0f - SMOOTH_ALPHA) * smoothLX;
-        smoothLY = SMOOTH_ALPHA * normLY + (1.0f - SMOOTH_ALPHA) * smoothLY;
+        smoothLX = SMOOTH_ALPHA * normLX + (1.0f - SMOOTH_ALPHA) * smoothLX * (-1);
+        smoothLY = SMOOTH_ALPHA * normLY + (1.0f - SMOOTH_ALPHA) * smoothLY * (-1);
 
         if (moving) {
             LOG(INFO) << "[MOVE] raw(" << lx << "," << ly << ") norm(" << normLX << "," << normLY
                       << ") smooth(" << smoothLX << "," << smoothLY << ")";
-            motion->move(smoothLX, smoothLY);
+            motion->move(smoothLY, smoothLX);
         } else {
             motion->stopMove();
         }
@@ -87,6 +93,16 @@ void Behavior::process(){
         } else if (rotating) {
             motion->stopRotate();
             rotating = false;
+        }
+
+        if (controlState.r2) {
+            kc.capoeiraKickRight();
+            // std::this_thread::sleep_for(chute);
+        }
+
+        if (controlState.l2) {
+            kc.capoeiraKickLeft();
+            // std::this_thread::sleep_for(chute);
         }
 
         std::this_thread::sleep_for(LOOP_MS);

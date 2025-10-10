@@ -78,8 +78,8 @@ void UnBeatables::initSession() {
     LOG(INFO) << "\x1B[32m[MAIN] Connecting to " << naoqiAddress.ip << ":" << naoqiAddress.port;
     auto connectFuture = session->connect("tcp://" + naoqiAddress.ip + ":" + std::to_string(naoqiAddress.port));
 
-    if (connectFuture.wait(3000) == qi::FutureState_Running)
-        throw std::runtime_error("Connection timeout");
+    //if (connectFuture.wait(3000) == qi::FutureState_Running)
+     // throw std::runtime_error("Connection timeout");
     if (connectFuture.hasError())
         throw std::runtime_error(connectFuture.error());
 

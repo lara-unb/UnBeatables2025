@@ -1,3 +1,4 @@
+#include <thread>
 #include <action/motion/Motion.h>
 #include <alcommon/alproxy.h>
 #include "Logs/EasyLogging.h"
@@ -30,7 +31,7 @@ void Motion::rest() {
 
 void Motion::move(float x, float y) {
     LOG(INFO) << "\x1B[37m[MOTION] Moving (" << x << " | " << y << ")\x1B[0m";
-    motionService.move(x, y, 0.0f);
+    motionService.move(x * -1, y * -1, 0.0f);
 }
 
 void Motion::rotate(bool side) {
@@ -59,11 +60,11 @@ void Motion::moveHead(float x, float y) {
     float clamped_y = std::max(std::min(inverted_y, pitch_max), pitch_min);
 
     motionService.setAngles("HeadYaw", clamped_y, 0.1f);
-    motionService.setAngles("HeadPitch", clamped_x, 0.1f);
+    motionService.setAngles("HeadPitch", clamped_x *-1, 0.1f);
 }
 
 void Motion::stopRotate() {
-    motionService.move(0.0f, 0.0f, 0.0f);
+    motionService.move(0.0001f, 0.0f, 0.0f);
 }
 
 void Motion::stopMove() {
