@@ -56,10 +56,10 @@ void Behavior::process(){
             smoothRY = SMOOTH_ALPHA * ny + (1.0f - SMOOTH_ALPHA) * smoothRY;
 
             motion->moveHead(smoothRX, smoothRY);
-            headMoving = true;
-        } else if (headMoving) {
-            motion->stopMoveHead();
-            headMoving = false;
+            // headMoving = true;
+        } else {
+            motion->stopMove();
+            // headMoving = false;
         }
 
         int abs_lx = std::abs((int)lx);
@@ -77,8 +77,6 @@ void Behavior::process(){
         smoothLY = SMOOTH_ALPHA * normLY + (1.0f - SMOOTH_ALPHA) * smoothLY * (-1);
 
         if (moving) {
-            LOG(INFO) << "[MOVE] raw(" << lx << "," << ly << ") norm(" << normLX << "," << normLY
-                      << ") smooth(" << smoothLX << "," << smoothLY << ")";
             motion->move(smoothLY, smoothLX);
         } else {
             motion->stopMove();

@@ -6,6 +6,8 @@
 #include <alcommon/alproxy.h>
 #include <alvalue/alvalue.h>
 
+#include "action/animations/Idle.h"
+
 Kick::Kick()
     : motion(boost::make_shared<AL::ALProxy>(session, "ALMotion"))
 {
@@ -21,7 +23,45 @@ void Kick::capoeiraKickLeft() {
 }
 
 void Kick::capoeiraKickRight() {
-    playAnimation(capoeiraRight);
+        try {
+            // 1. Desabilita os comportamentos de postura idle dos braços
+            motion.setIdlePostureEnabled("Arms", false);
+            motion.setIdlePostureEnabled("LArm", false);
+            motion.setIdlePostureEnabled("RArm", false);
+
+            // 2. Configura a stiffeness máxima para travar as juntas
+            std::vector<std::string> armJoints = {
+                "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll", "LWristYaw", "LHand",
+                "RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw", "RHand"
+            };
+
+            std::vector<float> maxStiffness(armJoints.size(), 1.0f); // Stiffness máxima
+            motion.setStiffnesses(armJoints, maxStiffness);
+
+            // 3. Move para a posição desejada
+            motion.setAngles("LShoulderPitch", 2.08032f, 0.15f);
+            motion.setAngles("LShoulderRoll", 0.232204f, 0.15f);
+            motion.setAngles("LElbowYaw", 0.23115f, 0.15f);
+            motion.setAngles("LElbowRoll", -1.00488f, 0.15f);
+            motion.setAngles("LWristYaw", -1.81776f, 0.15f);
+            motion.setAngles("LHand", 0.00852656f, 0.1f);
+
+            motion.setAngles("RShoulderPitch", 2.07949f, 0.15f);
+            motion.setAngles("RShoulderRoll", -0.251327f, 0.15f);
+            motion.setAngles("RElbowYaw", -0.0636714f, 0.15f);
+            motion.setAngles("RElbowRoll", 1.03516f, 0.15f);
+            motion.setAngles("RWristYaw", 1.81566f, 0.15f);
+            motion.setAngles("RHand", 0.121521f, 0.1f);
+
+            // 4. Aguarda o movimento terminar
+            // std::this_thread::sleep_for(std::chrono::milliseconds(800));
+
+            LOG(INFO) << "\x1B[32m[ARMS] Arms locked in standing pose permanently\x1B[0m";
+
+        } catch (const AL::ALError& e) {
+            LOG(ERROR) << "\x1B[31m[ERROR] Failed to lock arms position: " << e.what() << "\x1B[0m";
+        }
+
 }
 
 void Kick::playAnimation(const Animation& anim) {
